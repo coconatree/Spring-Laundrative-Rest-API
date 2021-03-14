@@ -1,14 +1,12 @@
 package com.laundrative_v1.app.service;
 
-import com.laundrative_v1.app.dao.StoreDao;
 import com.laundrative_v1.app.entity.StoreEntity;
 import com.laundrative_v1.app.repository.StoreRepo;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @NoArgsConstructor
@@ -27,9 +25,11 @@ public class StoreService
 
     }
 
-    public List<StoreEntity> readAll()
+    public Optional<StoreEntity> readAll()
     {
-        return repo.findAll();
+        Long id = new Long(1);
+
+        return repo.findById(id);
     }
 
     public void update(){}

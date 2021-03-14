@@ -8,10 +8,11 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Repository
-@Entity(name = "KURUMLAR")
-@Table(name = "kurumlar")
+@Entity
+@Table(name = "\"kurumlar\"")
 @Getter
 @Setter
+@AllArgsConstructor
 public class StoreEntity implements Serializable
 {
     @Id
@@ -26,4 +27,6 @@ public class StoreEntity implements Serializable
     private String supervisorName;
     @Column(name = "yonetici_eposta")
     private String email;
+
+    protected StoreEntity(){}
 }
