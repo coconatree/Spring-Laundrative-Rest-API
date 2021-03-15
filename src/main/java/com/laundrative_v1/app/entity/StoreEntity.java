@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Table(name = "`kurumlar`")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class StoreEntity implements Serializable
 {
