@@ -4,6 +4,8 @@ package com.laundrative_v1.app.utility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.format.datetime.standard.DateTimeFormatterFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.function.ServerResponse;
@@ -146,6 +148,14 @@ public class Utility
         return json.toString();
     }
     */
+
+    public static ResponseEntity<Object> createResponse(String key, Object body, HttpStatus status)
+    {
+        HttpHeaders header = new HttpHeaders();
+        header.set("ACCESS_KEY", key);
+
+        return new ResponseEntity<>(body, header, status);
+    }
 
     // Driver code for quick testing
 

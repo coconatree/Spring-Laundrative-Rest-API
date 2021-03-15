@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("api/v1/test")
+@RequestMapping("api/v1/user/test")
 public class TestController
 {
     @GetMapping(value = "/")

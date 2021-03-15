@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Repository
 @Entity
-@Table(name = "`kurumlar`")
+@Table(name = "kurumlar")
 @Getter
 @Setter
 @Builder
