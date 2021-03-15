@@ -17,7 +17,7 @@ import javax.persistence.Entity;
 public class StoreDao
 {
         private Long id;
-        private Long storeName;
+        private String storeName;
         private String telephone;
         private String supervisorName;
         private String email;

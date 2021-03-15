@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Repository
 @Entity
-@Table(name = "\"kurumlar\"")
+@Table(name = "`kurumlar`")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class StoreEntity implements Serializable
     @Column(name = "id")
     private Long id;
     @Column(name = "kurum_adi")
-    private Long storeName;
+    private String storeName;
     @Column(name = "telefon")
     private String telephone;
     @Column(name = "yonetici_adi")

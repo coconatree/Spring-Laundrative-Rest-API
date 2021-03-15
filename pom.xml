@@ -72,10 +72,14 @@
             This solved my problem with connecting to mariaDB
         -->
 
+        <!--
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+
+        -->
 
         <!-- OTHER DEPENDENCIES -->
 
@@ -116,17 +120,16 @@
             <version>3.12.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.2.17.Final</version>
+            <version>6.0.0.Alpha6</version>
+            <type>pom</type>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.2.17.Final</version>
-        </dependency>
 
     </dependencies>
 
