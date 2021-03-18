@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user/institution") // Url with /user will be set as USER role in spring security
+@RequestMapping("/user/institution") // Url with /user/** will be set as USER role in spring security
 public class InstitutionController
 {
     @Autowired
