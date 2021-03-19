@@ -1,5 +1,6 @@
 package com.laundrative_v2.app.controler;
 
+import com.laundrative_v2.app.beans.db.InstitutionDb;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ public class InstitutionController
     InstitutionDao institutionDao;
 
     @GetMapping("/")
-    public Iterable<com.laundrative_v2.app.beans.db.InstitutionDb> getAll()
+    public Iterable<InstitutionDb> getAll()
     {
         return institutionDao.readAll();
     }
