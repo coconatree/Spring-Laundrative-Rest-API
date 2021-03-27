@@ -7,6 +7,7 @@
 * Download the dependencies using maven download
 * Open the application.properties file
 * Change the  following properties according to the os
+
 ```
    server.ssl.key-store  - This is the certificate path
    spring.datasource.url - This is the url for the datasource
@@ -16,6 +17,9 @@
 ```
 
 * Open the UtilityConfig.java file under src/main/java/com/laundrative_v2/app/util/UtilityConfig.java
+
 ```
    IMAGE_LOADING_BASE_PATH to the path where the .png images are stored in your computer (Images can be found in the ortak.zip from the dropbox)
 ```
+
+*Run the src/main/java/com/laundrative_v2/app/AppApplication.java 
