@@ -1,10 +1,9 @@
 package com.laundrative_v2.app.dao;
 
-import com.laundrative_v2.app.beans.db.InstitutionDb;
+import com.laundrative_v2.app.beans.db.Institution.InstitutionDb;
 import com.laundrative_v2.app.repository.InstitutionRepo;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
 package com.laundrative_v2.app.beans.db;
 
+import com.laundrative_v2.app.beans.db.Address.NeighborhoodDb;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,7 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "musteri_adresler")
+@Table(name = "musteri_adres")
 @Getter
 @Setter
 @ToString
@@ -20,6 +21,10 @@ public class CustomerAddressDb
     @ManyToOne
     @JoinColumn(name = "musteri_id")
     private CustomerDb customer;
+
+    @OneToOne
+    @JoinColumn(name = "mahalle_id")
+    private NeighborhoodDb neighborhood;
 
     @Column(name = "adres")
     private String address;

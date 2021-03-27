@@ -1,9 +1,9 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.db.CountyDb;
-import com.laundrative_v2.app.beans.db.DistrictDb;
-import com.laundrative_v2.app.beans.db.NeighborhoodDb;
-import com.laundrative_v2.app.beans.db.ProvinceDb;
+import com.laundrative_v2.app.beans.db.Address.CountyDb;
+import com.laundrative_v2.app.beans.db.Address.DistrictDb;
+import com.laundrative_v2.app.beans.db.Address.NeighborhoodDb;
+import com.laundrative_v2.app.beans.db.Address.ProvinceDb;
 import com.laundrative_v2.app.dao.AddressDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;

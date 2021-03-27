@@ -1,9 +1,9 @@
 package com.laundrative_v2.app.dao;
 
-import com.laundrative_v2.app.beans.db.CountyDb;
-import com.laundrative_v2.app.beans.db.DistrictDb;
-import com.laundrative_v2.app.beans.db.NeighborhoodDb;
-import com.laundrative_v2.app.beans.db.ProvinceDb;
+import com.laundrative_v2.app.beans.db.Address.CountyDb;
+import com.laundrative_v2.app.beans.db.Address.DistrictDb;
+import com.laundrative_v2.app.beans.db.Address.NeighborhoodDb;
+import com.laundrative_v2.app.beans.db.Address.ProvinceDb;
 import com.laundrative_v2.app.repository.CountyRepo;
 import com.laundrative_v2.app.repository.DistrictRepo;
 import com.laundrative_v2.app.repository.NeighborhoodRepo;

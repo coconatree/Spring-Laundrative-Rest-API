@@ -1,6 +1,6 @@
 package com.laundrative_v2.app.repository;
 
-import com.laundrative_v2.app.beans.db.DistrictDb;
+import com.laundrative_v2.app.beans.db.Address.DistrictDb;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

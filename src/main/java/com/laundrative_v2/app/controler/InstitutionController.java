@@ -1,6 +1,6 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.db.InstitutionDb;
+import com.laundrative_v2.app.beans.db.Institution.InstitutionDb;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
