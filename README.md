@@ -1,6 +1,6 @@
 # Laundrative Rest API 
 
-##Download the repository
+## Download the repository
 
 * Open the project in the preferred code editor / idea
 * Download the dependencies using maven download
