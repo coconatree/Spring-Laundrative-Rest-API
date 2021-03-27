@@ -1,7 +1,8 @@
 # Laundrative Rest API 
 
-## Download the repository
+## How to set up the Rest API 
 
+* Download the repository
 * Open the project in the preferred code editor / idea
 * Download the dependencies using maven download
 * Open the application.properties file
