@@ -22,4 +22,4 @@
    IMAGE_LOADING_BASE_PATH to the path where the .png images are stored in your computer (Images can be found in the ortak.zip from the dropbox)
 ```
 
-*Run the src/main/java/com/laundrative_v2/app/AppApplication.java 
+* Run the src/main/java/com/laundrative_v2/app/AppApplication.java 
