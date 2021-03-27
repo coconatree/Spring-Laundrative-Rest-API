@@ -16,10 +16,4 @@
    spring.datasource.driver-class-name - This is the driver which the API wll use while connecting to the database (MYSQL driver is already on the dependencies)
 ```
 
-* Open the UtilityConfig.java file under src/main/java/com/laundrative_v2/app/util/UtilityConfig.java
-
-```
-   IMAGE_LOADING_BASE_PATH to the path where the .png images are stored in your computer (Images can be found in the ortak.zip from the dropbox)
-```
-
 * Run the src/main/java/com/laundrative_v2/app/AppApplication.java 
