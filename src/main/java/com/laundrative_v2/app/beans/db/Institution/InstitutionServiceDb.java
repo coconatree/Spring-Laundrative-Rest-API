@@ -23,7 +23,7 @@ public class InstitutionServiceDb
 
     @OneToOne
     @JoinColumn(name = "kurum_id")
-    private InstitutionDb institutionId;
+    private InstitutionDb institution;
 
     @Column(name = "mahalle_id")
     private Long neighborhoodId;

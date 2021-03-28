@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-public class InstitutionKind
+public class InstitutionKindDb
 {
     // There is an error wiht this class
 
@@ -29,5 +29,5 @@ public class InstitutionKind
     @Column(name = "kurum_id")
     private Long institutionId;
 
-    protected InstitutionKind(){}
+    protected InstitutionKindDb(){}
 }
