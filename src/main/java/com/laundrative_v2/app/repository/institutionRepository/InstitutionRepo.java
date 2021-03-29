@@ -7,8 +7,6 @@ import java.util.*;
 
 public interface InstitutionRepo extends JpaRepository<InstitutionDb, Long>
 {
-    //TODO
-    // -Should ask about this once more
-
     Optional<InstitutionDb> findById(Long id);
+    List<InstitutionDb> findAllByIdIn(List<Long> idList);
 }

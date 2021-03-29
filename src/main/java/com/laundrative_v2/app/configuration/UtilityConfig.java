@@ -15,6 +15,6 @@ public class UtilityConfig
 
     public final static DateFormat DATE_FORMAT_1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     public final static DateFormat DATE_FORMAT_2 = new SimpleDateFormat("yyyy-MM-dd");
-    protected final static ZoneId ZONE_ID_TR = ZoneId.of("+03:00");
+    public final static ZoneId ZONE_ID_TR = ZoneId.of("+03:00");
     public final static DateTimeFormatter DATE_TIME_FORMATTER = new DateTimeFormatterFactory("dd.MM.yyyy HH:mm").createDateTimeFormatter();
 }

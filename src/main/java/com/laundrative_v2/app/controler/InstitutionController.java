@@ -7,10 +7,12 @@ import com.laundrative_v2.app.beans.json.Response.InstitutionListQueryRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -21,9 +23,15 @@ public class InstitutionController
     InstitutionDao institutionDao;
 
     @GetMapping("/")
-    public ResponseEntity<Object> getByRequestBodyObject(@RequestBody InstitutionListQueryReq object)
+    public ResponseEntity<Object> getByRequestBodyObject(
+            @RequestParam("neighborhoodId") Long neighborhoodId,
+            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date date,
+            @RequestParam("categories") Long [] categories
+    )
     {
-        List<InstitutionListQueryRes> response =  institutionDao.readByObject(object);
+        System.out.println(date);
+
+        List<InstitutionListQueryRes> response =  institutionDao.queryList(neighborhoodId, new Date(), categories);
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);

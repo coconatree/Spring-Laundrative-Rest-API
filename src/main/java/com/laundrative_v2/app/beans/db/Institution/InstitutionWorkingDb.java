@@ -6,7 +6,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Time;
-import java.util.Date;
 
 
 @Entity

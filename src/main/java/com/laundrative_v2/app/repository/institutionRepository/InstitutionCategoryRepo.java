@@ -2,6 +2,8 @@ package com.laundrative_v2.app.repository.institutionRepository;
 
 import com.laundrative_v2.app.beans.db.Institution.InstitutionCategoryDb;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.Set;
 
 public interface InstitutionCategoryRepo extends JpaRepository<InstitutionCategoryDb, Long>
 {
-    List<InstitutionCategoryDb> findByCategoryIdInAndInstitutionId(List<Long> categoryList, Long id);
-    InstitutionCategoryDb findByInstitutionIdAndAndCategoryId(Long id, Long categoryId);
+    @Query(value = "SELECT db FROM InstitutionCategoryDb db WHERE db.institutionId = :id AND db.categoryId = :categoryId")
+    List<InstitutionCategoryDb> findInstitutionIdByInstitutionIdAndCategoryId(@Param("id") Long id, @Param("categoryId") Long categoryId);
+
+    Boolean existsByInstitutionIdAndAndCategoryId(Long id, Long categoryId);
 }

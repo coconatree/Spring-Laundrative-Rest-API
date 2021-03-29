@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "adres_mahalle")
 @Getter
 @Setter
-@ToString
 public class NeighborhoodDb
 {
     @Id

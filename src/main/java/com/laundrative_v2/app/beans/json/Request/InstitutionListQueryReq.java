@@ -1,7 +1,9 @@
 package com.laundrative_v2.app.beans.json.Request;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 public class InstitutionListQueryReq
 {
     private Long neighborhoodId;
-    private Date date;
-    List<Long> listOfCategories;
+    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
+    private Date clientDate;
+    private Long [] listOfCategories;
 }

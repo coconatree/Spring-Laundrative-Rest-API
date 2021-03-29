@@ -9,7 +9,7 @@ import com.laundrative_v2.app.beans.json.Response.InstitutionListQueryRes;
 
 import com.laundrative_v2.app.beans.pojo.KindAndTypeJson;
 import com.laundrative_v2.app.beans.pojo.KindPriceJson;
-import com.laundrative_v2.app.beans.pojo.TimeDayAsNumber;
+
 import com.laundrative_v2.app.repository.*;
 import com.laundrative_v2.app.repository.institutionRepository.*;
 import com.laundrative_v2.app.util.Utility;
@@ -19,9 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.sql.Time;
+import java.util.*;
 
 @Service
 public class InstitutionDao
@@ -44,90 +43,70 @@ public class InstitutionDao
     @Autowired
     private NeighborhoodRepo neighborhoodRepo;
 
-    public List<InstitutionListQueryRes> readByObject(InstitutionListQueryReq object)
+    public List<InstitutionListQueryRes> queryList(Long neighborhoodID, Date clientDate, Long [] categories)
     {
         List<InstitutionServiceDb> institutionServiceDbList = null;
-        List<InstitutionCategoryDb> institutionCategoryDbList = null;
-        InstitutionWorkingDb institutionWorkingDb = null;
 
         NeighborhoodDb neighborhoodDb;
 
+        // Response Init Variables
 
         List<Long> idList;
 
-        ArrayList<InstitutionListQueryRes> responsesList;
 
+        // Getting the neighborhood
 
-            Long objectId = object.getNeighborhoodId();
-            Date objectDate = object.getDate();
-            List<Long> objectCategoryList = object.getListOfCategories();
+        neighborhoodDb = neighborhoodRepo.findById(neighborhoodID).get();
 
-            // Getting the neighborhood
+        institutionServiceDbList = institutionServiceRepo.findAllByNeighborhoodDbId(neighborhoodDb.getId());
 
-            neighborhoodDb = neighborhoodRepo.findById(objectId).get();
+        idList = new ArrayList<>();
 
-            System.out.println("NEIGHBORHOOD ID : " + neighborhoodDb.getId());
+        Calendar calendar = Utility.getCalendar(clientDate);
 
-            institutionServiceDbList = institutionServiceRepo.findAllByNeighborhoodDbId(neighborhoodDb.getId());
-
-            System.out.println("INSTITUTION SERVICE SIZE : " + institutionServiceDbList.size());
-
-            TimeDayAsNumber timeDayAsNumber = Utility.parseDate(objectDate);
-
-            idList = new ArrayList<>();
-
-            for (InstitutionServiceDb element : institutionServiceDbList)
-            {
-                System.out.println(" e : " + element.getInstitutionId());
-                System.out.println(" a : " + timeDayAsNumber.getTime());
-                System.out.println(" t : " + timeDayAsNumber.getTime());
-                System.out.println(" y : " + timeDayAsNumber.getDay());
-
-                institutionWorkingDb = institutionWorkingRepo.findByInstitutionIdAndDay(
-                        element.getInstitutionId(),
-                        timeDayAsNumber.getDay()
-                );
-
-                if(institutionWorkingDb == null)
-                {
-                    System.out.println("IS NULL");
-                    continue;
-                }
-
-
-                System.out.println("WORKING  : " + institutionWorkingDb.getInstitutionId() + " - " + institutionWorkingDb.getStartingTime());
-
-                for (Long category : objectCategoryList)
-                {
-                    if(institutionCategoryRepo.findByInstitutionIdAndAndCategoryId(element.getId(), category) != null)
-                    {
-                        if(institutionWorkingDb != null && !idList.contains(element.getId()))
-                        {
-                            idList.add(element.getId());
-                        }
-                    }
-                    else
-                        break;
-                }
-            }
-
-            responsesList = new ArrayList<>();
-
-            initResponseList(neighborhoodDb, idList, objectDate, responsesList);
-
-            return responsesList;
-
-
-    }
-
-    private List<InstitutionListQueryRes> initResponseList(NeighborhoodDb neighborhoodDb, List<Long> idList, Date clientDate, List<InstitutionListQueryRes> responseList)
-    {
-        InstitutionListQueryRes responseJson = null;
-        InstitutionDb element = null;
-
-        if(idList != null)
+        for (InstitutionServiceDb serviceElement : institutionServiceDbList)
         {
-            for (Long elementId : idList)
+            // Will get the date query output
+
+            Time time  = new Time(clientDate.getTime());
+
+            System.out.println("TIME TIME TIME : " + time);
+
+            List<InstitutionWorkingDb> workingDbList = new ArrayList<>(
+                    institutionWorkingRepo.findByTimeBetween(calendar.get(Calendar.DAY_OF_WEEK) - 1, time)
+            );
+
+            System.out.println("EXIST : " + institutionWorkingRepo.existsByInstitutionIdAndDayAndEndingTimeIsGreaterThanEqualAndAndStartingTimeIsLessThan(
+                    serviceElement.getInstitutionId(),
+                    calendar.get(Calendar.DAY_OF_WEEK) - 1,
+                    time,
+                    time
+            ));
+
+            Long serviceElementID = serviceElement.getInstitutionId();
+
+            for (Long category : categories)
+            {
+                if(institutionCategoryRepo.existsByInstitutionIdAndAndCategoryId(serviceElementID, category))
+                    if(!idList.contains(serviceElementID))
+                    {
+                        idList.add(serviceElementID);
+                    }
+                else
+                    break;
+            }
+        }
+
+        // Creating the response
+
+        if(idList != null && 0 < idList.size())
+        {
+            List<InstitutionDb> resultSet = institutionRepo.findAllByIdIn(idList);
+            List<InstitutionListQueryRes> responseList = new ArrayList<>();
+
+            InstitutionListQueryRes responseJson = null;
+
+            for (InstitutionDb responseEntity : resultSet)
             {
                 responseJson = new InstitutionListQueryRes();
 
@@ -135,34 +114,28 @@ public class InstitutionDao
                 //-Set up the isFavorite using the JWT
                 //-Should edit the database so it contains the maximum service price as well
 
-                element = institutionRepo.findById(elementId).get();
-
                 InstitutionServiceDb institutionServiceDb = institutionServiceRepo.findAllByNeighborhoodDbIdAndAndInstitutionId(
                         neighborhoodDb.getId(),
-                        element.getId()
+                        responseEntity.getId()
                 );
 
                 responseJson.setNeighborhoodId(neighborhoodDb.getId());
                 responseJson.setNeighborhoodName(neighborhoodDb.getNeighborhoodName());
 
-                responseJson.setInstitutionName(element.getInstitutionName());
-                responseJson.setInstitutionId(element.getId());
+                responseJson.setInstitutionName(responseEntity.getInstitutionName());
+                responseJson.setInstitutionId(responseEntity.getId());
                 responseJson.setMinimumOrderPrice(institutionServiceDb.getMinOrderAmount());
                 responseJson.setMaximumServicePrice(new BigDecimal(1000));
                 responseJson.setMaximumServicePrice(institutionServiceDb.getMinServiceAmount());
                 responseJson.setIsFavorite(false);
-
-                List<InstitutionWorkingDb> list2 = institutionWorkingRepo.findAllByInstitutionId(element.getId());
-
-                responseJson.initWorkingHours(clientDate, institutionWorkingRepo.findByInstitutionIdAndDay(element.getId(), Utility.getDayFromADate(clientDate)));
+                responseJson.init(clientDate);
 
                 responseList.add(responseJson);
             }
+            return responseList;
         }
-
-        return responseList;
+        return null;
     }
-
 
     @Autowired
     private InstitutionKindRepo institutionKindRepo;
