@@ -1,12 +1,14 @@
 package com.laundrative_v2.app.dao;
 
 import com.laundrative_v2.app.beans.db.Address.NeighborhoodDb;
-import com.laundrative_v2.app.beans.db.Institution.InstitutionCategoryDb;
-import com.laundrative_v2.app.beans.db.Institution.InstitutionDb;
-import com.laundrative_v2.app.beans.db.Institution.InstitutionServiceDb;
-import com.laundrative_v2.app.beans.db.Institution.InstitutionWorkingDb;
-import com.laundrative_v2.app.beans.json.Request.InstitutionJsonReq;
-import com.laundrative_v2.app.beans.json.Response.InstitutionJsonRes;
+import com.laundrative_v2.app.beans.db.Institution.*;
+import com.laundrative_v2.app.beans.db.KindDb;
+import com.laundrative_v2.app.beans.json.Request.InstitutionListQueryReq;
+import com.laundrative_v2.app.beans.json.Response.InstitutionInfoQueryRes;
+import com.laundrative_v2.app.beans.json.Response.InstitutionListQueryRes;
+
+import com.laundrative_v2.app.beans.pojo.KindAndTypeJson;
+import com.laundrative_v2.app.beans.pojo.KindPriceJson;
 import com.laundrative_v2.app.beans.pojo.TimeDayAsNumber;
 import com.laundrative_v2.app.repository.*;
 import com.laundrative_v2.app.repository.institutionRepository.*;
@@ -20,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class InstitutionDao
@@ -39,10 +40,11 @@ public class InstitutionDao
     @Autowired
     private InstitutionCategoryRepo institutionCategoryRepo;
 
+
     @Autowired
     private NeighborhoodRepo neighborhoodRepo;
 
-    public List<InstitutionJsonRes> readByObject(InstitutionJsonReq object)
+    public List<InstitutionListQueryRes> readByObject(InstitutionListQueryReq object)
     {
         List<InstitutionServiceDb> institutionServiceDbList = null;
         List<InstitutionCategoryDb> institutionCategoryDbList = null;
@@ -53,7 +55,7 @@ public class InstitutionDao
 
         List<Long> idList;
 
-        ArrayList<InstitutionJsonRes> responsesList;
+        ArrayList<InstitutionListQueryRes> responsesList;
 
 
             Long objectId = object.getNeighborhoodId();
@@ -118,16 +120,16 @@ public class InstitutionDao
 
     }
 
-    private List<InstitutionJsonRes> initResponseList(NeighborhoodDb neighborhoodDb, List<Long> idList, Date clientDate, List<InstitutionJsonRes> responseList)
+    private List<InstitutionListQueryRes> initResponseList(NeighborhoodDb neighborhoodDb, List<Long> idList, Date clientDate, List<InstitutionListQueryRes> responseList)
     {
-        InstitutionJsonRes responseJson = null;
+        InstitutionListQueryRes responseJson = null;
         InstitutionDb element = null;
 
         if(idList != null)
         {
             for (Long elementId : idList)
             {
-                responseJson = new InstitutionJsonRes();
+                responseJson = new InstitutionListQueryRes();
 
                 //TODO
                 //-Set up the isFavorite using the JWT
@@ -152,11 +154,6 @@ public class InstitutionDao
 
                 List<InstitutionWorkingDb> list2 = institutionWorkingRepo.findAllByInstitutionId(element.getId());
 
-                for (InstitutionWorkingDb deneme : list2)
-                {
-                    System.out.println("WOKING FROM THE LIST  : " + deneme);
-                }
-
                 responseJson.initWorkingHours(clientDate, institutionWorkingRepo.findByInstitutionIdAndDay(element.getId(), Utility.getDayFromADate(clientDate)));
 
                 responseList.add(responseJson);
@@ -166,11 +163,64 @@ public class InstitutionDao
         return responseList;
     }
 
-    public InstitutionDb read(Long institutionId)
+
+    @Autowired
+    private InstitutionKindRepo institutionKindRepo;
+
+    @Autowired
+    private KindRepo kindRepo;
+
+    public InstitutionInfoQueryRes read(Long institutionId)
     {
         try
         {
-            return institutionRepo.findById(institutionId).get();
+            InstitutionInfoQueryRes response = null;
+            KindAndTypeJson kindAndTypeJson = null;
+            KindPriceJson kindPriceJson = null;
+
+            InstitutionDb institutionDb = null;
+            ArrayList<KindDb> kindDbArray = null;
+
+            // Getting all the necessary information about the institution
+
+            institutionDb = institutionRepo.findById(institutionId).get();
+
+            ArrayList<InstitutionKindDb> institutionKindDbArr = new ArrayList<>(
+                    institutionKindRepo.findAllByInstitutionId(institutionId)
+            );
+
+            // Getting all the necessary information about the related categories and kinds
+            // And building the response object
+
+            response = new InstitutionInfoQueryRes();
+
+            for (InstitutionKindDb element : institutionKindDbArr)
+            {
+                Long category_Id  = element.getKindCategoryId();
+
+                kindDbArray = new ArrayList<>(kindRepo.findAllByCategoryAndId(category_Id, element.getKindId()));
+
+                kindAndTypeJson = new KindAndTypeJson();
+                kindAndTypeJson.setCategoryId(category_Id);
+
+                for (KindDb kindElement : kindDbArray)
+                {
+                    kindPriceJson = new KindPriceJson();
+
+                    kindPriceJson.setKindId(kindElement.getId());
+                    kindPriceJson.setKindName(kindElement.getName());
+
+                    Utility utility = Utility.getInstance();
+
+                    kindPriceJson.setKindImage(utility.imageToBase64(kindElement.getImage()));
+                    kindPriceJson.setType(null);
+                    kindPriceJson.setPrice(new BigDecimal(0));
+
+                    kindAndTypeJson.add(kindPriceJson);
+                }
+                response.add(kindAndTypeJson);
+            }
+            return response;
         }
         catch (Exception e)
         {

@@ -13,9 +13,6 @@ import javax.persistence.*;
 @ToString
 public class InstitutionKindDb
 {
-    // Should look at this class later
-
-
     @Column(name = "cins_id")
     private Long kindId;
 
@@ -28,7 +25,7 @@ public class InstitutionKindDb
     private Long kindInstitutionId;
 
     @Column(name = "kurum_id")
-    private Long institutionDb;
+    private Long institutionId;
 
     protected InstitutionKindDb(){}
 }

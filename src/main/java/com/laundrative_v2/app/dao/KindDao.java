@@ -10,17 +10,7 @@ public class KindDao
 {
     @Autowired
     KindRepo repo;
-
-    public KindDb read(Long id, Long category)
-    {
-        KindDb obj = repo.findByIdAndCategory(id, category);
-
-        if(obj == null)
-            return null;
-
-        return obj;
-    }
-
+    
     public Iterable<KindDb> readAll()
     {
         return repo.findAll();

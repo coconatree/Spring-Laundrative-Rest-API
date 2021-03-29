@@ -1,19 +1,18 @@
 package com.laundrative_v2.app.beans.json.Response;
 
 import com.laundrative_v2.app.beans.db.Institution.InstitutionWorkingDb;
+import com.laundrative_v2.app.beans.pojo.WorkingHoursJson;
 import com.laundrative_v2.app.util.Utility;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class InstitutionJsonRes
+public class InstitutionListQueryRes
 {
     private Long neighborhoodId;
     private String neighborhoodName;

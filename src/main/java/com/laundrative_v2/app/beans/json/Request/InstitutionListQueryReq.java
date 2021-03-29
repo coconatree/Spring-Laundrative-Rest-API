@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class InstitutionJsonReq
+public class InstitutionListQueryReq
 {
     private Long neighborhoodId;
     private Date date;

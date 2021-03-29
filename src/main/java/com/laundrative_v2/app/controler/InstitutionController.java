@@ -1,8 +1,9 @@
 package com.laundrative_v2.app.controler;
 
 import com.laundrative_v2.app.beans.db.Institution.InstitutionDb;
-import com.laundrative_v2.app.beans.json.Request.InstitutionJsonReq;
-import com.laundrative_v2.app.beans.json.Response.InstitutionJsonRes;
+import com.laundrative_v2.app.beans.json.Request.InstitutionListQueryReq;
+import com.laundrative_v2.app.beans.json.Response.InstitutionInfoQueryRes;
+import com.laundrative_v2.app.beans.json.Response.InstitutionListQueryRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,9 @@ public class InstitutionController
     InstitutionDao institutionDao;
 
     @GetMapping("/")
-    public ResponseEntity<Object> getByRequestBodyObject(@RequestBody InstitutionJsonReq object)
+    public ResponseEntity<Object> getByRequestBodyObject(@RequestBody InstitutionListQueryReq object)
     {
-        System.out.println("HEYOOOO");
-        System.out.println("Object :  " + object.toString());
-
-        List<InstitutionJsonRes> response =  institutionDao.readByObject(object);
+        List<InstitutionListQueryRes> response =  institutionDao.readByObject(object);
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);
@@ -36,7 +34,7 @@ public class InstitutionController
     @GetMapping("/{institutionId}")
     public ResponseEntity<Object> getById(@PathVariable(value = "institutionId") Long institutionId)
     {
-        InstitutionDb response = institutionDao.read(institutionId);
+        InstitutionInfoQueryRes response = institutionDao.read(institutionId);
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);

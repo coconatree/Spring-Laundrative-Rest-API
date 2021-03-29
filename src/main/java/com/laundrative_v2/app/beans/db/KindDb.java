@@ -20,7 +20,9 @@ public class KindDb
     @Column(name = "adi")
     private String name;
     @Column(name = "resim")
-    private String image;   // Will be a byte[]
+    private String image;
+    @Column(name = "kurum_id")
+    private Long institutionId;
     @Column(name = "aktif")
     private int active;
 

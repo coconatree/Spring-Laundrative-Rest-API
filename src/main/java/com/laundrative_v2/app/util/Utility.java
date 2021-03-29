@@ -1,18 +1,21 @@
 package com.laundrative_v2.app.util;
 
-import com.laundrative_v2.app.beans.json.Response.WorkingHoursJson;
+import com.laundrative_v2.app.beans.pojo.WorkingHoursJson;
 import com.laundrative_v2.app.beans.pojo.TimeDayAsNumber;
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.imageio.ImageIO;
+import javax.persistence.Convert;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.sql.Time;
 import java.text.ParseException;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -117,7 +120,7 @@ public class Utility
         }
     }
 
-    public String imageToHex(String filename)
+    public String imageToBase64(String filename)
     {
         try
         {
@@ -128,9 +131,11 @@ public class Utility
 
             byte[] bytes = output.toByteArray();
 
-            // Converting to hexadecimal and returning it as a string
+            // Converting to base64 and returning it as a string
 
-            return DatatypeConverter.printHexBinary(output.toByteArray());
+            String encodedString = Base64.getEncoder().encodeToString(bytes);
+
+            return encodedString;
         }
         catch (Exception e)
         {

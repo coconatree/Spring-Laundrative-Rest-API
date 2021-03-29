@@ -23,7 +23,7 @@ public class KindController
     @GetMapping(value = "/{id}/{category}")
     public ResponseEntity<Object> get(@PathVariable(value = "id") Long id, @PathVariable(value = "category") Long category)
     {
-        KindDb kindDb = kindDao.read(id, category);
+        KindDb kindDb = null ; // kindDao.read(id, category);
 
         if(kindDb == null)
         {

@@ -1,10 +1,8 @@
-package com.laundrative_v2.app.beans.json.Response;
+package com.laundrative_v2.app.beans.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.sql.Time;
-import java.util.Calendar;
 import java.util.Date;
 
 import static com.laundrative_v2.app.configuration.UtilityConfig.DATE_FORMAT_1;
