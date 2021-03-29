@@ -1,9 +1,8 @@
 package com.laundrative_v2.app.controler;
 
 import com.laundrative_v2.app.beans.db.Institution.InstitutionDb;
-import com.laundrative_v2.app.beans.db.Institution.InstitutionServiceDb;
-import com.laundrative_v2.app.beans.json.InstitutionRequestJson;
-import com.laundrative_v2.app.beans.json.InstitutionResponseJson;
+import com.laundrative_v2.app.beans.json.Request.InstitutionJsonReq;
+import com.laundrative_v2.app.beans.json.Response.InstitutionJsonRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +20,12 @@ public class InstitutionController
     InstitutionDao institutionDao;
 
     @GetMapping("/")
-    public ResponseEntity<Object> getByRequestBodyObject(@RequestBody InstitutionRequestJson object)
+    public ResponseEntity<Object> getByRequestBodyObject(@RequestBody InstitutionJsonReq object)
     {
         System.out.println("HEYOOOO");
         System.out.println("Object :  " + object.toString());
 
-        List<InstitutionResponseJson> response =  institutionDao.readByObject(object);
+        List<InstitutionJsonRes> response =  institutionDao.readByObject(object);
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);
@@ -44,5 +43,4 @@ public class InstitutionController
         else
             return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 }

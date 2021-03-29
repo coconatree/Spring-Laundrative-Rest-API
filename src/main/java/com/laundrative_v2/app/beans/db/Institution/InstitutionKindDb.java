@@ -13,7 +13,8 @@ import javax.persistence.*;
 @ToString
 public class InstitutionKindDb
 {
-    // There is an error wiht this class
+    // Should look at this class later
+
 
     @Column(name = "cins_id")
     private Long kindId;
@@ -27,7 +28,7 @@ public class InstitutionKindDb
     private Long kindInstitutionId;
 
     @Column(name = "kurum_id")
-    private Long institutionId;
+    private Long institutionDb;
 
     protected InstitutionKindDb(){}
 }

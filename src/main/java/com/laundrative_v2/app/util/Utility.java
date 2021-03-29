@@ -1,5 +1,7 @@
 package com.laundrative_v2.app.util;
 
+import com.laundrative_v2.app.beans.json.Response.WorkingHoursJson;
+import com.laundrative_v2.app.beans.pojo.TimeDayAsNumber;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +11,12 @@ import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.sql.Time;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
-import static com.laundrative_v2.app.util.UtilityConfig.*;
+import static com.laundrative_v2.app.configuration.UtilityConfig.*;
 
 public class Utility
 {
@@ -135,15 +139,142 @@ public class Utility
         }
     }
 
+    // GETTING THE TIME AND DAY FROM THE DATE
+
+    public static TimeDayAsNumber parseDate(Date date)
+    {
+        String dateAsString = DATE_FORMAT_1.format(date);
+
+        String yearAsString  = dateAsString.substring(0, 4);
+        String monthAsString = dateAsString.substring(5, 7);
+        String dayAsString   = dateAsString.substring(8, 10);
+
+        String timeAsString  = dateAsString.substring(11, 19);
+
+        // Calendar API starts the index of the months from 0
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Integer.valueOf(yearAsString), Integer.valueOf(monthAsString) - 1, Integer.valueOf(dayAsString));
+
+        Time time = Time.valueOf(timeAsString);
+
+        Integer dayAsNumber = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        return new TimeDayAsNumber(time, dayAsNumber);
+    }
+
+    public static WorkingHoursJson createWorkingHoursJson(Date dateClient, long day, Time timeOpening, Time timeClosing)
+    {
+        String dateAsString = DATE_FORMAT_1.format(dateClient);
+
+        String yearAsString  = dateAsString.substring(0, 4);
+        String monthAsString = dateAsString.substring(5, 7);
+        String dayAsString   = dateAsString.substring(8, 10);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Integer.valueOf(yearAsString), Integer.valueOf(monthAsString) - 1, Integer.valueOf(dayAsString));
+
+        Integer dayAsNumberClient = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        // Calculating the day from the week day and the client date
+
+        Date dateOpening;
+        Date dateClosing;
+
+        dateOpening = getDateFromString1(yearAsString + "-" + monthAsString + "-" + dayAsString + "T" + timeOpening);
+        dateClosing = getDateFromString1(yearAsString + "-" + monthAsString + "-" + dayAsString + "T" + timeClosing);
+
+        return new WorkingHoursJson(dateOpening, dateClosing);
+    }
+
+    public static Integer getDayFromADate(Date date)
+    {
+        String dateAsString = DATE_FORMAT_1.format(date);
+
+        String yearAsString  = dateAsString.substring(0, 4);
+        String monthAsString = dateAsString.substring(5, 7);
+        String dayAsString   = dateAsString.substring(8, 10);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Integer.valueOf(yearAsString), Integer.valueOf(monthAsString) - 1, Integer.valueOf(dayAsString));
+
+        Integer dayAsNumberClient = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        return dayAsNumberClient;
+    }
+
+    // CREATING A DATE WITH GIVEN INITIAL DATE AND TIME AND DAY
+
     public static void main(String[] args)
     {
-        Utility utility = Utility.getInstance();
+        Time time = new Time(131313123123L);
 
-        String value = utility.imageToHex("k1_1_01.png");
+        WorkingHoursJson workingHoursJson = createWorkingHoursJson(getDateFromString1("2021-03-26T17:48:04"), 2L, time, new Time(12131313L));
 
-        if(value == null)
-            System.out.println("There was a problem");
-        else
-            System.out.println(value);
+        System.out.println(workingHoursJson.getStartingDate());
+        System.out.println(workingHoursJson.getEndingDate());
+        /*
+        String date1 = "2021-04-28T17:48:09";
+        String date2 = "2021-03-27T17:48:04";
+        String date3 = "2021-03-28T17:48:04";
+        String date4 = "2021-03-29T17:48:04";
+        String date5 = "2021-03-30T17:48:04";
+        String date6 = "2021-03-31T17:48:04";
+        String date7 = "2021-04-01T17:48:04";
+
+        parseDate(date1);
+        parseDate(date2);
+        parseDate(date3);
+        parseDate(date4);
+        parseDate(date5);
+        parseDate(date6);
+        parseDate(date7);
+    */
     }
+
+
+    /**
+
+     Utility utility = Utility.getInstance();
+
+     String value = utility.imageToHex("k1_1_01.png");
+
+     if(value == null)
+     System.out.println("There was a problem");
+     else
+     System.out.println(value);
+
+     * */
+
+    /**
+     if(dayAsInteger + increaseAmount <= upperBound)
+     {
+     if((dayAsInteger + increaseAmount) % 10 == (dayAsInteger + increaseAmount))
+     dayAsString = "0" + (dayAsInteger + increaseAmount);
+     else
+     dayAsString = String.valueOf(dayAsInteger + increaseAmount);
+     }
+     else
+     {
+     dayAsString = "0" + ((dayAsInteger + increaseAmount) % 30);
+
+     // Checking if it is a new year
+
+     if(monthAsInteger + 1 <= 12)
+     {
+     if (monthAsInteger % 10 == monthAsInteger)
+     {
+     monthAsString += "0" + monthAsInteger;
+     }
+     else
+     monthAsString += String.valueOf(monthAsInteger);
+     }
+     else
+     // Increasing the year
+
+     yearAsString = String.valueOf(Integer.valueOf(yearAsString) + 1);
+     }
+
+
+     */
 }

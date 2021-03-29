@@ -2,7 +2,6 @@ package com.laundrative_v2.app.beans.db.Institution;
 
 
 import com.laundrative_v2.app.beans.db.Address.NeighborhoodDb;
-import com.laundrative_v2.app.beans.db.OrderDb;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,12 +20,15 @@ public class InstitutionServiceDb
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "kurum_id")
-    private InstitutionDb institution;
+    //@ManyToOne(cascade = CascadeType.ALL, targetEntity = InstitutionDb.class)
+    //@JoinColumn(name="kurum_id")
+    @Column(name = "kurum_id")
+    private Long institutionId;
 
-    @Column(name = "mahalle_id")
-    private Long neighborhoodId;
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = NeighborhoodDb.class)
+    @JoinColumn(name = "mahalle_id")
+    public NeighborhoodDb neighborhoodDb;
+
     @Column(name  = "min_sip_tutar")
     private BigDecimal minOrderAmount;
     @Column(name  = "min_servis_tutar")

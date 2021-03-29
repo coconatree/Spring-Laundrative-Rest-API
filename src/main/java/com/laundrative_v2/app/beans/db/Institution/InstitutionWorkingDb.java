@@ -5,11 +5,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.Date;
 
+
 @Entity
-@Table(name = "kurum_calısma")
+@Table(name = "kurum_calisma")
 @Getter
 @Setter
 @ToString
@@ -19,15 +20,16 @@ public class InstitutionWorkingDb
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "kurum_id")
-    private InstitutionDb institutionId;
+    //@ManyToOne(cascade = CascadeType.ALL, targetEntity = InstitutionDb.class)
+    @Column(name = "kurum_id")
+    private Long institutionId;
+
     @Column(name = "gun")
     private int day;
     @Column(name  = "baslama_saati")
-    private Date startingDate;
+    private Time startingTime;
     @Column(name  = "bitis_saati")
-    private Date endingDate;
+    private Time endingTime;
 
     protected InstitutionWorkingDb(){}
 }

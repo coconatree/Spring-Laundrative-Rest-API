@@ -17,8 +17,10 @@ public class InstitutionCategoryDb
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "kurum_id")
     private Long institutionId;
+
     @Column(name = "kategori_id")
     private Long categoryId;
 

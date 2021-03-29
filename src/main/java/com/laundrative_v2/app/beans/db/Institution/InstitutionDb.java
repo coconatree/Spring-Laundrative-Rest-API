@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "kurum")
@@ -15,7 +17,7 @@ public class InstitutionDb
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "kurum_adi")
     private String institutionName;
     @Column(name = "adres")
@@ -26,6 +28,20 @@ public class InstitutionDb
     private String administratorName;
     @Column(name = "yonetici_eposta")
     private String administratorEmail;
+
+
+    //TODO
+    // -Should probably look into cascade type for choosing the optimal one !!!
+
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionServiceDb.class)
+    private List<InstitutionServiceDb> institutionServiceList;
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionWorkingDb.class)
+    private List<InstitutionWorkingDb> institutionWorkingList;
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionCategoryDb.class)
+    private List<InstitutionCategoryDb> institutionCategoryList;
 
     protected InstitutionDb(){};
 }

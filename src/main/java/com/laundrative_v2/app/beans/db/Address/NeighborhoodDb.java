@@ -1,10 +1,12 @@
 package com.laundrative_v2.app.beans.db.Address;
 
+import com.laundrative_v2.app.beans.db.Institution.InstitutionServiceDb;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "adres_mahalle")
@@ -22,4 +24,9 @@ public class NeighborhoodDb
     private String neighborhoodName;
     @Column(name = "posta_kodu")
     private String postalCode;
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionServiceDb.class,orphanRemoval = false)
+    private List<InstitutionServiceDb> services;
+
+    protected NeighborhoodDb(){}
 }
