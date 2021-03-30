@@ -9,8 +9,8 @@ import com.laundrative_v2.app.beans.json.Response.NeighborhoodInfo;
 import com.laundrative_v2.app.beans.pojo.KindAndTypeJson;
 import com.laundrative_v2.app.beans.pojo.KindPriceJson;
 
+
 import com.laundrative_v2.app.repository.*;
-import com.laundrative_v2.app.repository.institutionRepository.*;
 import com.laundrative_v2.app.util.Utility;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
@@ -20,30 +20,34 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+
 
 @Service
 public class InstitutionDao
 {
     private static final Logger logger = LoggerFactory.getLogger(InstitutionDao.class);
 
-    @Autowired
     private InstitutionRepo institutionRepo;
 
-    @Autowired
     private InstitutionServiceRepo institutionServiceRepo;
 
-    @Autowired
     private InstitutionWorkingRepo institutionWorkingRepo;
 
-    @Autowired
     private InstitutionCategoryRepo institutionCategoryRepo;
 
+    private NeighborhoodRepo neighborhoodRepo;
+
+    public InstitutionDao(InstitutionServiceRepo institutionServiceRepo) {
+        this.institutionServiceRepo = institutionServiceRepo;
+    }
 
     @Autowired
-    private NeighborhoodRepo neighborhoodRepo;
+    public InstitutionDao(InstitutionWorkingRepo institutionWorkingRepo, InstitutionCategoryRepo institutionCategoryRepo, NeighborhoodRepo neighborhoodRepo, InstitutionRepo institutionRepo) {
+        this.institutionWorkingRepo = institutionWorkingRepo;
+        this.institutionCategoryRepo = institutionCategoryRepo;
+        this.neighborhoodRepo = neighborhoodRepo;
+        this.institutionRepo = institutionRepo;
+    }
 
     public List<InstListQueryRes> readQueryList(Long neighborhoodID, Date clientDate, Long [] categories)
     {
@@ -132,6 +136,7 @@ public class InstitutionDao
         catch (Exception e)
         {
             logger.warn(e.getMessage());
+            System.out.println(e);
         }
         return null;
     }
