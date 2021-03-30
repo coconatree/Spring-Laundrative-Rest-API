@@ -1,18 +1,13 @@
 package com.laundrative_v2.app.util;
 
-import com.laundrative_v2.app.beans.pojo.WorkingHoursJson;
-import com.laundrative_v2.app.beans.pojo.TimeDayAsNumber;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.imageio.ImageIO;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.sql.Time;
 import java.text.ParseException;
 import java.util.*;
 

@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.util.Date;
 
 
 @Entity
@@ -25,10 +26,14 @@ public class InstitutionWorkingDb
 
     @Column(name = "gun")
     private int day;
+
+    @Temporal(TemporalType.TIME)
     @Column(name  = "baslama_saati")
-    private Time startingTime;
+    private Date startingTime;
+
+    @Temporal(TemporalType.TIME)
     @Column(name  = "bitis_saati")
-    private Time endingTime;
+    private Date endingTime;
 
     protected InstitutionWorkingDb(){}
 }

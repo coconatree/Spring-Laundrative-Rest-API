@@ -1,9 +1,7 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.db.Institution.InstitutionDb;
-import com.laundrative_v2.app.beans.json.Request.InstitutionListQueryReq;
 import com.laundrative_v2.app.beans.json.Response.InstitutionInfoQueryRes;
-import com.laundrative_v2.app.beans.json.Response.InstitutionListQueryRes;
+import com.laundrative_v2.app.beans.json.Response.InstListQueryRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/institution") // Url with /user/** will be set as USER role in spring security
+@RequestMapping("/institution")
 public class InstitutionController
 {
     @Autowired
@@ -29,9 +27,7 @@ public class InstitutionController
             @RequestParam("categories") Long [] categories
     )
     {
-        System.out.println(date);
-
-        List<InstitutionListQueryRes> response =  institutionDao.queryList(neighborhoodId, new Date(), categories);
+        List<InstListQueryRes> response =  institutionDao.readQueryList(neighborhoodId, date, categories);
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);

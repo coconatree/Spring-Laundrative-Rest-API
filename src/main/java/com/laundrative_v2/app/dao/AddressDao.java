@@ -8,8 +8,7 @@ import com.laundrative_v2.app.repository.CountyRepo;
 import com.laundrative_v2.app.repository.DistrictRepo;
 import com.laundrative_v2.app.repository.NeighborhoodRepo;
 import com.laundrative_v2.app.repository.ProvinceRepo;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+import com.sun.org.slf4j.internal.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ import java.util.List;
 @Service
 public class AddressDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(AddressDao.class);
+    private static Logger logger = LoggerFactory.getLogger(AddressDao.class);
 
     @Autowired
     ProvinceRepo provinceRepo;

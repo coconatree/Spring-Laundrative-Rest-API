@@ -20,8 +20,6 @@ public class InstitutionServiceDb
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@ManyToOne(cascade = CascadeType.ALL, targetEntity = InstitutionDb.class)
-    //@JoinColumn(name="kurum_id")
     @Column(name = "kurum_id")
     private Long institutionId;
 

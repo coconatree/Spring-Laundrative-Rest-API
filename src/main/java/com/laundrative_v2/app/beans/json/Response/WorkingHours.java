@@ -1,23 +1,22 @@
-package com.laundrative_v2.app.beans.pojo;
+package com.laundrative_v2.app.beans.json.Response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.util.Date;
 
-import static com.laundrative_v2.app.configuration.UtilityConfig.DATE_FORMAT_1;
-
+@Data
 @Getter
 @ToString
 @NoArgsConstructor
-public class WorkingHoursJson
+public class WorkingHours
 {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date startingDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date  endingDate;
 
-    public WorkingHoursJson(Date startingDate, Date endingDate)
+    public WorkingHours(Date startingDate, Date endingDate)
     {
         this.startingDate = startingDate;
         this.endingDate = endingDate;

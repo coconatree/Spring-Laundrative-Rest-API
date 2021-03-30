@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,5 +18,14 @@ public interface InstitutionWorkingRepo extends JpaRepository<InstitutionWorking
             @Param("saat") Time saat
     );
 
-    Boolean existsByInstitutionIdAndDayAndEndingTimeIsGreaterThanEqualAndAndStartingTimeIsLessThan(Long institutionId, Integer day, Time startingTime, Time endingTime);
+    /**
+     *
+     * @param list
+     * @param day
+     * @param time
+     * @return
+     */
+
+    @Query(value = "SELECT k.institutionId FROM InstitutionWorkingDb k WHERE k.institutionId IN :list AND k.day = :day AND k.startingTime <= :time AND :time <= k.endingTime")
+    List<Long> searchByDayTime(@Param("list") List<Long> list, @Param("day") Integer day, @Param("time") Time time);
 }

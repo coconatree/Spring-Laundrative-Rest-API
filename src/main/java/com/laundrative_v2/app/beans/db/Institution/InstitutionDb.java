@@ -29,19 +29,16 @@ public class InstitutionDb
     @Column(name = "yonetici_eposta")
     private String administratorEmail;
 
-
-    //TODO
-    // -Should probably look into cascade type for choosing the optimal one !!!
-
-
     @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionServiceDb.class)
+    @JoinColumn(name = "kurum_id", referencedColumnName = "id")
     private List<InstitutionServiceDb> institutionServiceList;
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionWorkingDb.class)
+    @JoinColumn(name = "kurum_id", referencedColumnName = "id")
     private List<InstitutionWorkingDb> institutionWorkingList;
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionCategoryDb.class)
+    @JoinColumn(name = "kurum_id", referencedColumnName = "id")
     private List<InstitutionCategoryDb> institutionCategoryList;
 
-    protected InstitutionDb(){};
 }
