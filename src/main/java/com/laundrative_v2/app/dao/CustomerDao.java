@@ -29,7 +29,7 @@ public class CustomerDao
         CustomerDb obj = new CustomerDb();
 
         obj.setName(customer.getName());
-        obj.setPassword(customer.getPassword());
+        // obj.setPassword(customer.getPassword());
         obj.setTelephone(customer.getTelephone());
         obj.setEmail(customer.getEmail());
         obj.setCreationDate(new Date());
@@ -53,7 +53,7 @@ public class CustomerDao
             CustomerDb old = repo.findById(id).get();
 
             old.setName(customer.getName());
-            old.setPassword(customer.getPassword());
+            //old.setPassword(customer.getPassword());
             old.setTelephone(customer.getTelephone());
             old.setEmail(customer.getEmail());
             old.setUpdateDate(new Date());
@@ -72,12 +72,6 @@ public class CustomerDao
         if(repo.existsById(id))
         {
             CustomerDb obj = repo.findById(id).get();
-
-            if(obj.getPassword().equals(password))
-            {
-                repo.delete(obj);
-                return obj;
-            }
         }
         return null;
     }

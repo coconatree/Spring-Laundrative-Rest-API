@@ -30,7 +30,7 @@ public class MobileOrderDb
     @Column(name = "notlar")
     private String notes;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "siparis_id")
-    private OrderDb order;
+    private OrderDb orderDb;
 }

@@ -19,26 +19,23 @@ public class OrderDetailsDb
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "siparis_id")
-    private OrderDb order;
+    @Column(name = "siparis_id")
+    private Long orderId;
 
     @Column(name = "kategori")
-    private int category;
+    private Long categoryId;
     @Column(name = "cins")
-    private String kind;
+    private Long kindId;
     @Column(name = "tip")
-    private int type;
-    @Column(name = "adi")
-    private String name;
+    private Long type;
     @Column(name = "adet")
-    private int amount;
+    private Integer amount;
     @Column(name = "tarih")
     private Date date;
     @Column(name = "fiyat")
     private BigDecimal price;
     @Column(name = "durum")
-    private int status;
+    private Integer status;
 
     public OrderDetailsDb() {}
 }

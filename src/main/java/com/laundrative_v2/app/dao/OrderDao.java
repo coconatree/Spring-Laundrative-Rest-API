@@ -1,98 +1,127 @@
 package com.laundrative_v2.app.dao;
 
 import com.laundrative_v2.app.beans.db.*;
-import com.laundrative_v2.app.beans.json.OrderJson;
+import com.laundrative_v2.app.beans.json.Request.OrderPostReq;
+import com.laundrative_v2.app.beans.pojo.OrderProduct;
 import com.laundrative_v2.app.repository.*;
-import com.laundrative_v2.app.util.Utility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
+import static com.laundrative_v2.app.configuration.UtilityConfig.DATE_FORMAT_1;
 
 @Service
 public class OrderDao
 {
     @Autowired
     OrderRepo orderRepo;
-    @Autowired
-    OrderDetailsRepo orderDetailsRepo;
-    @Autowired
-    OrderMovementRepo orderMovementRepo;
+
     @Autowired
     MobileOrderRepo mobileOrderRepo;
+
+    @Autowired
+    OrderMovementRepo orderMovementRepo;
+
+    @Autowired
+    OrderDetailsRepo orderDetailsRepo;
+
     @Autowired
     CustomerRepo customerRepo;
 
-    public List<OrderDb> get(Long id)
+    Logger logger = LoggerFactory.getLogger(OrderDao.class);
+
+    public Long save(OrderPostReq req)
     {
-        if(customerRepo.existsById(id))
+        try
         {
-            return orderRepo.findByCustomer(customerRepo.findById(id).get());
-        }
-        return null;
-    }
+            OrderDb orderDb = new OrderDb();
 
-    public List<Object> save(OrderJson obj)
-    {
-        if(customerRepo.existsById(obj.getCustomerId()))
-        {
-            OrderDb order = new OrderDb();
+            // UNTIL WE STAT USING JWT
 
-            order.setCustomer(customerRepo.findById(obj.getCustomerId()).get());
-            order.setOrderDate(new Date());
-            order.setOrderLocation(obj.getOrderLocation());
-            order.setTotal(obj.getTotal());
-            order.setCash(obj.getCash());
-            order.setPos(obj.getPos());
-            order.setNotes(obj.getNotes());
-            order.setDiscount(new BigDecimal(0));
-            order.setDiscountType(0);
-            order.setReceivingDate(null);
-            order.setReceivingAddress(obj.getReceivingAddress());
-            order.setDeliveryDate(null);
-            order.setDeliveryAddress("");
-            order.setDeliveryStatus(0);
-            order.setPaymentStatus(0);
+            CustomerDb customerDb = customerRepo.findById(16862L).get();
 
-            OrderDetailsDb orderDetails = new OrderDetailsDb();
+            orderDb.setAccountId(1L); // DONT KNOW
+            orderDb.setCustomerId(customerDb.getId());
 
-            orderDetails.setOrder(order);
-            orderDetails.setCategory(1);
-            orderDetails.setKind("");
-            orderDetails.setType(1);
-            orderDetails.setName("");
-            orderDetails.setAmount(1);
-            orderDetails.setDate(new Date());
-            orderDetails.setPrice(new BigDecimal(1));
-            orderDetails.setStatus(1);
+            orderDb.setOrderDate(null);
+            orderDb.setTotal(req.getTotal());
+            orderDb.setCash(null);
+            orderDb.setPos(null);
+            orderDb.setNotes(req.getNote());
+            orderDb.setDiscount(req.getDiscountPercentage());
+            orderDb.setDiscountType(null);
 
-            OrderMovementDb orderMovement = new OrderMovementDb();
+            orderDb.setReceivingDate(req.getReceivingDate());
+            orderDb.setReceivingAddress(req.getReceivingAddress());
+            orderDb.setDeliveryDate(req.getDeliveryDate());
+            orderDb.setDeliveryAddress(req.getDeliveryAddress());
+            orderDb.setDeliveryStatus(0);
 
-            orderMovement.setOrder(order);
-            orderMovement.setDate(new Date());
-            orderMovement.setMovementType(1);
+            OrderDb saved = orderRepo.save(orderDb);
+
+            ArrayList<OrderDetailsDb> orderDetailsDbList = new ArrayList<>();
+            OrderDetailsDb filler = null;
+
+            for (OrderProduct product : req.getProducts())
+            {
+                filler = new OrderDetailsDb();
+
+                filler.setOrderId(saved.getId());
+                filler.setCategoryId(product.getCategoryId());
+                filler.setKindId(product.getKindId());
+                filler.setType(product.getType());
+                filler.setAmount(product.getAmount());
+                filler.setDate(null);
+                filler.setPrice(product.getPrice());
+                filler.setStatus(0);
+
+                orderDetailsDbList.add(filler);
+            }
+
+            OrderMovementDb movementDb = new OrderMovementDb();
+
+
+            movementDb.setDate(new Date());
+            movementDb.setMovementType(0);
 
             MobileOrderDb mobileOrderDb = new MobileOrderDb();
 
-            mobileOrderDb.setDate(new Date());
-            mobileOrderDb.setName("");
-            mobileOrderDb.setAddress("");
-            mobileOrderDb.setPhone("");
-            mobileOrderDb.setEmail("");
-            mobileOrderDb.setNotes("");
-            mobileOrderDb.setOrder(order);
+            mobileOrderDb.setDate(null);
+            mobileOrderDb.setName("NEEDS LOGGING SYSTEM");
+            mobileOrderDb.setAddress(null); // Which address
+            mobileOrderDb.setPhone("NEEDS LOGGING SYSTEM");
+            mobileOrderDb.setEmail("NEEDS LOGGING SYSTEM");
+            mobileOrderDb.setNotes(req.getNote());
 
-            List<Object> list = new ArrayList<>();
+            //TODO
+            //-CHECK IF 0 IS DEFAULT FOR MOBILE STATUS
+            // movementDb movementTypes ??? What are they ?
 
-            list.add(orderRepo.save(order));
-            list.add(orderDetailsRepo.save(orderDetails));
-            list.add(orderMovementRepo.save(orderMovement));
 
-            return list;
+
+            movementDb.setOrderId(saved.getId());
+            mobileOrderDb.setOrderDb(saved);
+
+            mobileOrderRepo.save(mobileOrderDb);
+            orderMovementRepo.save(movementDb);
+            orderDetailsRepo.saveAll(orderDetailsDbList);
+
+
+            if(saved != null)
+                return saved.getId();
+            else
+                return null;
+        }
+        catch (Exception e)
+        {
+            logger.warn(e.getMessage());
+            logger.warn(e.getCause().getMessage());
+
+            System.out.println(e);
         }
         return null;
     }

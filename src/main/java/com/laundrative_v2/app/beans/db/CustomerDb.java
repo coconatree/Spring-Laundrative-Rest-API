@@ -33,8 +33,6 @@ public class CustomerDb
     private Integer discountType;
     @Column(name = "indirim_orani")
     private Integer discountPercentage;
-    @Column(name = "password")
-    private String password;
 
     public CustomerDb() {}
 }

@@ -18,9 +18,8 @@ public class OrderMovementDb
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "siparis_id")
-    private OrderDb order;
+    @Column(name = "siparis_id")
+    private Long orderId;
 
     @Column(name = "tarih")
     private Date date;

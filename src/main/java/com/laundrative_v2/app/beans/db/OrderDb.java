@@ -1,12 +1,16 @@
 package com.laundrative_v2.app.beans.db;
 
+import com.laundrative_v2.app.beans.db.Institution.InstitutionCategoryDb;
+import com.laundrative_v2.app.beans.db.Institution.InstitutionWorkingDb;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "siparis")
@@ -19,9 +23,11 @@ public class OrderDb
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "musteri_id")
-    private CustomerDb customer;
+    @Column(name = "account_id")
+    private Long accountId;
+
+    @Column(name = "musteri_id")
+    private Long customerId;
 
     @Column(name = "siparis_tarihi")
     private Date orderDate;
@@ -52,4 +58,19 @@ public class OrderDb
     private int deliveryStatus;
     @Column(name = "odeme_status")
     private int paymentStatus;
+
+    /**
+
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = OrderDetailsDb.class, orphanRemoval = true)
+    private List<OrderDetailsDb> orderDetailsDbList;
+
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = OrderMovementDb.class, orphanRemoval = true)
+    private OrderMovementDb orderMovementDb;
+
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = MobileOrderDb.class, orphanRemoval = true)
+    private MobileOrderDb mobileOrderDb;
+
+    */
+
+    public OrderDb(){}
 }
