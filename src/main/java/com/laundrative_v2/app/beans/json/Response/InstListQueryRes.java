@@ -2,7 +2,11 @@ package com.laundrative_v2.app.beans.json.Response;
 
 import com.laundrative_v2.app.beans.db.Institution.InstitutionDb;
 import com.laundrative_v2.app.beans.db.Institution.InstitutionServiceDb;
+import com.laundrative_v2.app.beans.db.Institution.InstitutionWorkingDb;
 import lombok.*;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import java.math.BigDecimal;
 
@@ -23,10 +27,11 @@ public class InstListQueryRes
     private BigDecimal freeServicePrice;
     private Boolean isFavorite;
 
-    public static InstListQueryRes from(InstitutionDb db, NeighborhoodInfo neighborhoodInfo)
+    public static InstListQueryRes from(InstitutionDb db, NeighborhoodInfo neighborhoodInfo, Date date)
     {
         InstListQueryRes response = new InstListQueryRes();
         InstitutionServiceDb service = null;
+        InstitutionWorkingDb working = null;
 
         response.setNeighborhoodId(neighborhoodInfo.getNeighborhoodId());
         response.setNeighborhoodName(neighborhoodInfo.getNeighborhoodName());
@@ -39,6 +44,20 @@ public class InstListQueryRes
                 break;
             }
         }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        for (InstitutionWorkingDb element : db.getInstitutionWorkingList())
+        {
+            if(element.getDay() == calendar.get(Calendar.DAY_OF_WEEK))
+            {
+                working = element;
+                break;
+            }
+        }
+
+        response.setWorkingHours(new WorkingHours(working.getStartingTime(), working.getEndingTime()));
 
         response.setInstitutionName(db.getInstitutionName());
         response.setInstitutionId(db.getId());

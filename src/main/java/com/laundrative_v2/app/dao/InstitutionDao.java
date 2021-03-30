@@ -124,7 +124,7 @@ public class InstitutionDao
 
             for(InstitutionDb db : finalResultSet)
             {
-                responseList.add(InstListQueryRes.from(db, neighborhoodInfo));
+                responseList.add(InstListQueryRes.from(db, neighborhoodInfo, clientDate));
             }
 
             return responseList;
@@ -135,9 +135,6 @@ public class InstitutionDao
         }
         return null;
     }
-
-    private void validate(){};
-
 
     @Autowired
     private InstitutionKindRepo institutionKindRepo;

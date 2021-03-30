@@ -12,13 +12,13 @@ import java.util.Date;
 public class WorkingHours
 {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date startingDate;
+    private Date startingTime;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date  endingDate;
+    private Date endingTime;
 
     public WorkingHours(Date startingDate, Date endingDate)
     {
-        this.startingDate = startingDate;
-        this.endingDate = endingDate;
+        this.startingTime = startingDate;
+        this.endingTime   = endingDate;
     }
 }
