@@ -1,6 +1,9 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.json.Response.InstitutionInfoQueryRes;
+import com.laundrative_v2.app.beans.json.Request.CategoryKind;
+import com.laundrative_v2.app.beans.json.Request.InstDetailedReq;
+import com.laundrative_v2.app.beans.json.Request.InstInfoQueryRes;
+import com.laundrative_v2.app.beans.json.Response.InstDetailedRes;
 import com.laundrative_v2.app.beans.json.Response.InstListQueryRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
@@ -38,11 +41,47 @@ public class InstitutionController
     @GetMapping("/{institutionId}")
     public ResponseEntity<Object> getById(@PathVariable(value = "institutionId") Long institutionId)
     {
-        InstitutionInfoQueryRes response = institutionDao.read(institutionId);
+        List<InstInfoQueryRes> response = institutionDao.read(institutionId);
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);
         else
             return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     *
+     * Detailed search
+     *
+     * request:
+     * {mahalle_id,teslim_alma_zaman,teslim_etme_zaman,
+     * [kategori, cins],
+     * ucretsiz_teslimat} // isaretli ise 'true' degil ise 'false'
+     *
+     * response: [{mahalle_id, mahalle_adi,
+     * calisma_saatleri:[{gun, baslangic_saati, bitis_saati}] // gün bazında
+     * isletme_adi, isletme_id,
+     * min_siparis_tutari,
+     * min_siparis_tutari_ucretsiz_servis,
+     * favori // favori ise 1 degilse 0
+     * }]
+     * */
+
+
+    @PostMapping("detailed/")
+    public ResponseEntity<Object> detailedSearch(@RequestBody InstDetailedReq request)
+    {
+        List<InstDetailedRes> response = institutionDao.detailedSearch(
+                request.getNeighborhoodId(),
+                request.getReceivingDate(),
+                request.getDeliveryDate(),
+                request.getArray(),
+                request.getFreeService()
+        );
+
+        if(response == null)
+            return Utility.createResponse("", null, HttpStatus.BAD_REQUEST);
+        else
+            return Utility.createResponse("", response, HttpStatus.OK);
     }
 }

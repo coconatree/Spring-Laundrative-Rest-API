@@ -8,4 +8,5 @@ import java.util.List;
 public interface InstitutionKindRepo extends JpaRepository<InstitutionKindDb, Long>
 {
     List<InstitutionKindDb> findAllByInstitutionId(Long id);
+    Boolean existsByInstitutionIdAndKindIdAndKindCategoryId(Long instId, Long kindId, Long categoryId);
 }

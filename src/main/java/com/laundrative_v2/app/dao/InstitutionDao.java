@@ -2,12 +2,14 @@ package com.laundrative_v2.app.dao;
 
 import com.laundrative_v2.app.beans.db.Institution.*;
 import com.laundrative_v2.app.beans.db.KindDb;
-import com.laundrative_v2.app.beans.json.Response.InstitutionInfoQueryRes;
+import com.laundrative_v2.app.beans.json.CategoryKindTypeJson;
+import com.laundrative_v2.app.beans.json.Request.CategoryKind;
+import com.laundrative_v2.app.beans.json.Response.InstDetailedRes;
 import com.laundrative_v2.app.beans.json.Response.InstListQueryRes;
 
 import com.laundrative_v2.app.beans.json.Response.NeighborhoodInfo;
-import com.laundrative_v2.app.beans.pojo.KindAndTypeJson;
-import com.laundrative_v2.app.beans.pojo.KindPriceJson;
+import com.laundrative_v2.app.beans.json.Request.InstInfoQueryRes;
+import com.laundrative_v2.app.beans.json.Response.KindPrice;
 
 
 import com.laundrative_v2.app.repository.*;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -42,40 +45,28 @@ public class InstitutionDao
     @Autowired
     NeighborhoodRepo neighborhoodRepo;
 
-    public void test(Long neighborhoodID)
+    public void test(Long neighborhoodID, Date clientDate, Long [] categories)
     {
 
     }
 
     public List<InstListQueryRes> readQueryList(Long neighborhoodID, Date clientDate, Long [] categories)
     {
+        try
+        {
             // Result Sets
-
-            logger.warn("PARAMETERS ARE : " + neighborhoodID + " - " + clientDate);
-            Arrays.stream(categories).forEach(p -> logger.warn(" ELEMENT : " + p));
 
             List<Long> serviceResult;
             List<Long> workingResult = new ArrayList<>();
-            List<Long> categoryResult = new ArrayList<>();
 
-            List<InstitutionWorkingDb> temp1;
-            List<InstitutionCategoryDb> temp2;
+            // NeighborhoodInfo
 
-            // This is the filtered ID list
-
-            List<Long> filteredIDList;
-
-            // Final Result Set
-
-            List<InstitutionDb> finalResultSet;
+            NeighborhoodInfo neighborhoodInfo = NeighborhoodInfo.from(neighborhoodRepo.findById(neighborhoodID).get());
 
             // Getting all the institutions in the given neighborhood
 
-            logger.warn(neighborhoodID.toString());
-
             serviceResult = institutionServiceRepo.searchBy(neighborhoodID);
 
-            logger.warn("SIZE AFTER SERVICE : " + workingResult.size());
             serviceResult.forEach(p -> logger.warn(p.toString()));
 
             // Setting up the day and time data
@@ -95,69 +86,19 @@ public class InstitutionDao
             logger.warn("SIZE AFTER WORKING : " + workingResult.size());
             workingResult.forEach(p -> logger.warn(p.toString()));
 
-            // Getting all the institutions which are open at given date and they operate in the given neighborhood
-            // and they serve to at least one of the given categories
+            // Filtering for the categories and mapping to the response object and returning it
 
-            temp2 = institutionCategoryRepo.findAllByInstitutionIdInAndCategoryIdIn(
-                    workingResult,
-                    categories
-            );
-
-            temp2.forEach(p -> System.out.println(p));
-
-            temp2.forEach(p -> categoryResult.add(p.getInstitutionId()));
-
-            // Initializing the filteredIDList and a validator boolean value for filtering
-
-            filteredIDList = new ArrayList<>();
-            boolean validator = false;
-
-            // First for iterates over the categoryResult sets ids
-
-            for (Long id : categoryResult)
-            {
-                for (Long category : categories)
-                {
-                    // And the inner loops check if the given institution is serving all of the categories or just one
-                    validator = institutionCategoryRepo.existsByInstitutionIdAndCategoryId(id, category);
-                }
-                if(validator && !filteredIDList.contains(id))
-                    // If the id doesn't exist in the loop and the institution serves to all of the
-                    // desired categories it is added to the filteredIDList
-                    filteredIDList.add(id);
-            }
-
-            // Getting the final result set and the neighborhood
-
-            finalResultSet = institutionRepo.findAllByIdIn(filteredIDList);
-            NeighborhoodInfo neighborhoodInfo = NeighborhoodInfo.from(neighborhoodRepo.findById(neighborhoodID).get());
-
-            // Results are mapped and returned
-
-            //TODO
-            // This will be converted to a stream
-            //FIXME
-            // convert me to a stream
-
-            List<InstListQueryRes> responseList = new ArrayList<>();
-
-            logger.warn("RESULT LIST SIZE : " + responseList.size());
-
-            for(InstitutionDb db : finalResultSet)
-            {
-                responseList.add(InstListQueryRes.from(db, neighborhoodInfo, clientDate));
-            }
-
-            return responseList;
-        //}
-        /**
-         catch (Exception e)
+            return institutionRepo.findAllByIdIn(workingResult).stream()
+                    .filter(e -> e.containsCategories(categories))
+                    .map(i -> InstListQueryRes.from(i, neighborhoodInfo, clientDate))
+                    .collect(Collectors.toList()
+                    );
+        }
+        catch (Exception e)
          {
-         logger.warn(e.getMessage());
-         System.out.println(e);
+            logger.warn(e.getMessage());
          }
-         * */
-        //return null;
+        return null;
     }
 
     @Autowired
@@ -166,57 +107,77 @@ public class InstitutionDao
     @Autowired
     private KindRepo kindRepo;
 
-    public InstitutionInfoQueryRes read(Long institutionId)
+    public List<InstInfoQueryRes> read(Long institutionId)
     {
         try
         {
-            InstitutionInfoQueryRes response = null;
-            KindAndTypeJson kindAndTypeJson = null;
-            KindPriceJson kindPriceJson = null;
-
-            InstitutionDb institutionDb = null;
-            ArrayList<KindDb> kindDbArray = null;
+            List<InstitutionKindDb> institutionKindDbList;
+            List<InstInfoQueryRes>  response = new ArrayList<>();
 
             // Getting all the necessary information about the institution
 
-            institutionDb = institutionRepo.findById(institutionId).get();
-
-            ArrayList<InstitutionKindDb> institutionKindDbArr = new ArrayList<>(
-                    institutionKindRepo.findAllByInstitutionId(institutionId)
-            );
+            institutionKindDbList = institutionKindRepo.findAllByInstitutionId(institutionId);
 
             // Getting all the necessary information about the related categories and kinds
             // And building the response object
 
-            response = new InstitutionInfoQueryRes();
-
-            for (InstitutionKindDb element : institutionKindDbArr)
+            try
             {
-                Long category_Id  = element.getKindCategoryId();
+                InstitutionDb institutionDb = null;
+                ArrayList<KindDb> kindDbArray = null;
 
-                kindDbArray = new ArrayList<>(kindRepo.findAllByCategoryAndId(category_Id, element.getKindId()));
+                // Getting all the necessary information about the institution
 
-                kindAndTypeJson = new KindAndTypeJson();
-                kindAndTypeJson.setCategoryId(category_Id);
+                institutionDb = institutionRepo.findById(institutionId).get();
 
-                for (KindDb kindElement : kindDbArray)
+                ArrayList<InstitutionKindDb> institutionKindDbArr = new ArrayList<>(
+                        institutionKindRepo.findAllByInstitutionId(institutionId)
+                );
+
+                // Getting all the necessary information about the related categories and kinds
+                // And building the response object
+
+                InstInfoQueryRes res = null;
+                KindPrice kindPrice = null;
+
+                response = new ArrayList<>();
+
+                for (InstitutionKindDb element : institutionKindDbArr)
                 {
-                    kindPriceJson = new KindPriceJson();
+                    Long category_Id  = element.getKindCategoryId();
 
-                    kindPriceJson.setKindId(kindElement.getId());
-                    kindPriceJson.setKindName(kindElement.getName());
+                    kindDbArray = new ArrayList<>(kindRepo.findAllByCategoryAndId(category_Id, element.getKindId()));
 
-                    Utility utility = Utility.getInstance();
+                    res = new InstInfoQueryRes();
+                    res.setCategoryId(category_Id);
 
-                    kindPriceJson.setKindImage(utility.imageToBase64(kindElement.getImage()));
-                    kindPriceJson.setType(null);
-                    kindPriceJson.setPrice(new BigDecimal(0));
+                    for (KindDb kindElement : kindDbArray)
+                    {
+                        kindPrice = new KindPrice();
 
-                    kindAndTypeJson.add(kindPriceJson);
+                        kindPrice.setKindId(kindElement.getId());
+                        kindPrice.setKindName(kindElement.getName());
+
+                        Utility utility = Utility.getInstance();
+
+                        kindPrice.setKindImage(utility.imageToBase64(kindElement.getImage()));
+                        kindPrice.setType(null);
+                        kindPrice.setPrice(new BigDecimal(0));
+
+                        res.add(kindPrice);
+                    }
+                    response.add(res);
                 }
-                response.add(kindAndTypeJson);
+                return response;
             }
-            return response;
+            catch (Exception e)
+            {
+                logger.warn("Error cause : \n " + e.getCause());
+                logger.warn("Error message : \n " + e.getMessage());
+                logger.warn("Error stack trace : \n " + e.getStackTrace());
+
+                return null;
+            }
         }
         catch (Exception e)
         {
@@ -226,5 +187,77 @@ public class InstitutionDao
 
             return null;
         }
+    }
+
+    public List<InstDetailedRes> detailedSearch(Long neighborhoodId, Date receivingDate, Date deliveryDate, CategoryKind [] array, boolean freeService)
+    {
+        try
+        {
+            // Getting the neighborhood info
+
+            logger.warn("NEIG ID : " + neighborhoodId + " DATE 1 : " + receivingDate + " DATE 2 : " + deliveryDate);
+            logger.warn("ARRAY : \n");
+            Arrays.stream(array).forEach(e -> logger.warn("ITEM : " + e));
+            logger.warn("BOOLEAN : " + freeService);
+
+            NeighborhoodInfo neighborhoodInfo = NeighborhoodInfo.from(neighborhoodRepo.findById(neighborhoodId).get());
+
+            logger.warn("NEIGH INFO : " + neighborhoodInfo);
+
+            int [] days = new int[2];
+
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.setTime(receivingDate);
+            days[0] = calendar.get(Calendar.DAY_OF_WEEK);
+            calendar.setTime(deliveryDate);
+            days[1] = calendar.get(Calendar.DAY_OF_WEEK);
+
+            List<Long> initialIds = institutionServiceRepo.searchBy(neighborhoodId);
+
+            logger.warn("INITIAL IDS : ");
+            initialIds.stream().forEach(e -> logger.warn("ITEM : " + e));
+
+            // Will change the following
+
+            List<Long> ids_Of_Open_And_Serving_To_The_Neighborhood = new ArrayList<>();
+
+            int counter = 0;
+
+            institutionRepo.findAllByIdIn(initialIds).stream().forEach(e -> logger.warn("HAS BEEN FOUND IN THE INITIAL SEARCH : " + e.getInstitutionName()));
+
+            for (Long id : initialIds)
+            {
+                for (CategoryKind element : array)
+                {
+                    if(institutionKindRepo.existsByInstitutionIdAndKindIdAndKindCategoryId(
+                            id,
+                            element.getKindId(),
+                            element.getCategoryId()))
+                    {
+                        logger.warn("FOUND : " + element);
+                        counter++;
+                    }
+                    logger.warn("TURNING FOR " + element);
+                }
+                if(counter == array.length)
+                {
+                    logger.warn("ADDED : " + id);
+                    ids_Of_Open_And_Serving_To_The_Neighborhood.add(id);
+                }
+                counter = 0;
+            }
+
+            // Will ask the freeServices working principle
+
+            return institutionRepo.findAllByIdIn(
+                    ids_Of_Open_And_Serving_To_The_Neighborhood
+            ).stream().filter(e -> e.is_Open_In_The_Given_Day(days)).map(i -> InstDetailedRes.from(i, neighborhoodInfo)).collect(Collectors.toList());
+        }
+        catch (Exception e)
+        {
+            logger.warn(e.getMessage());
+        }
+        return null;
     }
 }

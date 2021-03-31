@@ -66,8 +66,6 @@ public class InstListQueryRes
         response.setMaximumServicePrice(service.getMinServiceAmount());
         response.setIsFavorite(false);
 
-        //response.init(db);
-
         return response;
     }
 }

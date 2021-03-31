@@ -5,8 +5,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "kurum")
@@ -41,4 +44,36 @@ public class InstitutionDb
     @JoinColumn(name = "kurum_id", referencedColumnName = "id")
     private List<InstitutionCategoryDb> institutionCategoryList;
 
+    public boolean containsCategories(Long [] categories)
+    {
+        ArrayList<Boolean> validList = new ArrayList<>();
+
+        for (Long category : categories)
+        {
+            if(institutionCategoryList.stream().filter(e -> e.getCategoryId() == category).collect(Collectors.toList()).size() == 1);
+            {
+                validList.add(true);
+            }
+        }
+        return validList.size() == categories.length;
+    }
+
+    public boolean is_Open_In_The_Given_Day(int [] days)
+    {
+        ArrayList<Boolean> validList = new ArrayList<>();
+
+        for (int day : days)
+        {
+            if(institutionWorkingList.stream().filter(e -> e.getDay() == day).collect(Collectors.toList()).size() == 1);
+            {
+                validList.add(true);
+            }
+        }
+        return validList.size() == days.length;
+    }
+
+    public boolean has_Free_Service_For_The_Neighborhood(Long neighborhoodId)
+    {
+        return true;
+    }
 }
