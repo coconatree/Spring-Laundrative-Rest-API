@@ -27,37 +27,39 @@ public class InstitutionDao
 {
     private static final Logger logger = LoggerFactory.getLogger(InstitutionDao.class);
 
-    private InstitutionRepo institutionRepo;
-
-    private InstitutionServiceRepo institutionServiceRepo;
-
-    private InstitutionWorkingRepo institutionWorkingRepo;
-
-    private InstitutionCategoryRepo institutionCategoryRepo;
-
-    private NeighborhoodRepo neighborhoodRepo;
-
-    public InstitutionDao(InstitutionServiceRepo institutionServiceRepo) {
-        this.institutionServiceRepo = institutionServiceRepo;
-    }
+    @Autowired
+    InstitutionRepo institutionRepo;
 
     @Autowired
-    public InstitutionDao(InstitutionWorkingRepo institutionWorkingRepo, InstitutionCategoryRepo institutionCategoryRepo, NeighborhoodRepo neighborhoodRepo, InstitutionRepo institutionRepo) {
-        this.institutionWorkingRepo = institutionWorkingRepo;
-        this.institutionCategoryRepo = institutionCategoryRepo;
-        this.neighborhoodRepo = neighborhoodRepo;
-        this.institutionRepo = institutionRepo;
+    InstitutionServiceRepo institutionServiceRepo;
+
+    @Autowired
+    InstitutionWorkingRepo institutionWorkingRepo;
+
+    @Autowired
+    InstitutionCategoryRepo institutionCategoryRepo;
+
+    @Autowired
+    NeighborhoodRepo neighborhoodRepo;
+
+    public void test(Long neighborhoodID)
+    {
+
     }
 
     public List<InstListQueryRes> readQueryList(Long neighborhoodID, Date clientDate, Long [] categories)
     {
-        try
-        {
             // Result Sets
 
+            logger.warn("PARAMETERS ARE : " + neighborhoodID + " - " + clientDate);
+            Arrays.stream(categories).forEach(p -> logger.warn(" ELEMENT : " + p));
+
             List<Long> serviceResult;
-            List<Long> workingResult;
-            List<Long> categoryResult;
+            List<Long> workingResult = new ArrayList<>();
+            List<Long> categoryResult = new ArrayList<>();
+
+            List<InstitutionWorkingDb> temp1;
+            List<InstitutionCategoryDb> temp2;
 
             // This is the filtered ID list
 
@@ -69,7 +71,12 @@ public class InstitutionDao
 
             // Getting all the institutions in the given neighborhood
 
+            logger.warn(neighborhoodID.toString());
+
             serviceResult = institutionServiceRepo.searchBy(neighborhoodID);
+
+            logger.warn("SIZE AFTER SERVICE : " + workingResult.size());
+            serviceResult.forEach(p -> logger.warn(p.toString()));
 
             // Setting up the day and time data
 
@@ -78,19 +85,27 @@ public class InstitutionDao
 
             // Getting all the institutions which are open at given date and they operate in the given neighborhood
 
-            workingResult = institutionWorkingRepo.searchByDayTime(
+            institutionWorkingRepo.findAllByInstitutionIdInAndDayAndStartingTimeLessThanEqualAndEndingTimeGreaterThanEqual(
                     serviceResult,
                     calendar.get(Calendar.DAY_OF_WEEK),
+                    new Time(clientDate.getTime()),
                     new Time(clientDate.getTime())
-            );
+            ).forEach(p -> workingResult.add(p.getInstitutionId()));
+
+            logger.warn("SIZE AFTER WORKING : " + workingResult.size());
+            workingResult.forEach(p -> logger.warn(p.toString()));
 
             // Getting all the institutions which are open at given date and they operate in the given neighborhood
             // and they serve to at least one of the given categories
 
-            categoryResult = institutionCategoryRepo.searchByList(
+            temp2 = institutionCategoryRepo.findAllByInstitutionIdInAndCategoryIdIn(
                     workingResult,
                     categories
             );
+
+            temp2.forEach(p -> System.out.println(p));
+
+            temp2.forEach(p -> categoryResult.add(p.getInstitutionId()));
 
             // Initializing the filteredIDList and a validator boolean value for filtering
 
@@ -126,19 +141,23 @@ public class InstitutionDao
 
             List<InstListQueryRes> responseList = new ArrayList<>();
 
+            logger.warn("RESULT LIST SIZE : " + responseList.size());
+
             for(InstitutionDb db : finalResultSet)
             {
                 responseList.add(InstListQueryRes.from(db, neighborhoodInfo, clientDate));
             }
 
             return responseList;
-        }
-        catch (Exception e)
-        {
-            logger.warn(e.getMessage());
-            System.out.println(e);
-        }
-        return null;
+        //}
+        /**
+         catch (Exception e)
+         {
+         logger.warn(e.getMessage());
+         System.out.println(e);
+         }
+         * */
+        //return null;
     }
 
     @Autowired

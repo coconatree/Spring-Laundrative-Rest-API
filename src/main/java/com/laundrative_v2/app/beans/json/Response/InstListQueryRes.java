@@ -38,7 +38,7 @@ public class InstListQueryRes
 
         for (InstitutionServiceDb element : db.getInstitutionServiceList())
         {
-            if(element.neighborhoodDb.getId() == neighborhoodInfo.getNeighborhoodId())
+            if(element.getNeighborhoodId() == neighborhoodInfo.getNeighborhoodId())
             {
                 service = element;
                 break;

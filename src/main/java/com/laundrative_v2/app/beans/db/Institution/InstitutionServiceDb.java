@@ -23,9 +23,8 @@ public class InstitutionServiceDb
     @Column(name = "kurum_id")
     private Long institutionId;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = NeighborhoodDb.class)
-    @JoinColumn(name = "mahalle_id")
-    public NeighborhoodDb neighborhoodDb;
+    @Column(name = "mahalle_id")
+    public Long neighborhoodId;
 
     @Column(name  = "min_sip_tutar")
     private BigDecimal minOrderAmount;

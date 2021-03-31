@@ -25,6 +25,7 @@ public class NeighborhoodDb
     private String postalCode;
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = InstitutionServiceDb.class,orphanRemoval = false)
+    @JoinColumn(name = "mahalle_id", referencedColumnName = "id")
     private List<InstitutionServiceDb> services;
 
     protected NeighborhoodDb(){}
