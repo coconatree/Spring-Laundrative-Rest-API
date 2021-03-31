@@ -146,7 +146,11 @@ public class InstitutionDao
                 {
                     Long category_Id  = element.getKindCategoryId();
 
-                    kindDbArray = new ArrayList<>(kindRepo.findAllByCategoryAndId(category_Id, element.getKindId()));
+                    //TODO
+                    //Old One
+                    //- findAllByCategoryAndId
+
+                    kindDbArray = new ArrayList<>(kindRepo.findAllByInstitutionId(0L));
 
                     res = new InstInfoQueryRes();
                     res.setCategoryId(category_Id);
