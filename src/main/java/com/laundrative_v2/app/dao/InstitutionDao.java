@@ -3,12 +3,9 @@ package com.laundrative_v2.app.dao;
 import com.laundrative_v2.app.beans.db.institutionDb.*;
 import com.laundrative_v2.app.beans.db.KindDb;
 import com.laundrative_v2.app.beans.json.institution.request.CategoryKind;
-import com.laundrative_v2.app.beans.json.institution.response.InstDetailedRes;
-import com.laundrative_v2.app.beans.json.institution.response.InstListQueryRes;
+import com.laundrative_v2.app.beans.json.institution.response.*;
 
 import com.laundrative_v2.app.beans.json.Response.NeighborhoodInfo;
-import com.laundrative_v2.app.beans.json.institution.response.InstInfoQueryRes;
-import com.laundrative_v2.app.beans.json.institution.response.KindPrice;
 
 
 import com.laundrative_v2.app.repository.*;
@@ -259,5 +256,13 @@ public class InstitutionDao
             logger.warn(e.getMessage());
         }
         return null;
+    }
+
+    public List<WorkingHoursRes> getWorkingHours(Long id)
+    {
+        return institutionWorkingRepo.findAllByIdCustom(id)
+                .stream()
+                .map(element -> WorkingHoursRes.from(element))
+                .collect(Collectors.toList());
     }
 }

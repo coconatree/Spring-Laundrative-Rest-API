@@ -4,6 +4,7 @@ import com.laundrative_v2.app.beans.json.institution.request.InstDetailedReq;
 import com.laundrative_v2.app.beans.json.institution.response.InstInfoQueryRes;
 import com.laundrative_v2.app.beans.json.institution.response.InstDetailedRes;
 import com.laundrative_v2.app.beans.json.institution.response.InstListQueryRes;
+import com.laundrative_v2.app.beans.json.institution.response.WorkingHoursRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,24 +49,16 @@ public class InstitutionController
             return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     *
-     * Detailed search
-     *
-     * request:
-     * {mahalle_id,teslim_alma_zaman,teslim_etme_zaman,
-     * [kategori, cins],
-     * ucretsiz_teslimat} // isaretli ise 'true' degil ise 'false'
-     *
-     * response: [{mahalle_id, mahalle_adi,
-     * calisma_saatleri:[{gun, baslangic_saati, bitis_saati}] // gün bazında
-     * isletme_adi, isletme_id,
-     * min_siparis_tutari,
-     * min_siparis_tutari_ucretsiz_servis,
-     * favori // favori ise 1 degilse 0
-     * }]
-     * */
+    @GetMapping("/hours/{id}")
+    public ResponseEntity<Object> getWorkingHours(@PathVariable(value = "id") Long id)
+    {
+        List<WorkingHoursRes> response = institutionDao.getWorkingHours(id);
 
+        if(response == null)
+            return Utility.createResponse("", null, HttpStatus.BAD_REQUEST);
+        else
+            return Utility.createResponse("", response, HttpStatus.OK);
+    }
 
     @PostMapping("detailed/")
     public ResponseEntity<Object> detailedSearch(@RequestBody InstDetailedReq request)
