@@ -1,7 +1,7 @@
 package com.laundrative_v2.app.controler;
 
 
-import com.laundrative_v2.app.beans.json.Response.ProductRes;
+import com.laundrative_v2.app.beans.json.product.response.ProductRes;
 import com.laundrative_v2.app.dao.ProductDao;
 import com.laundrative_v2.app.util.Utility;
 import org.slf4j.Logger;

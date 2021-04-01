@@ -1,10 +1,9 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.json.Request.CategoryKind;
-import com.laundrative_v2.app.beans.json.Request.InstDetailedReq;
-import com.laundrative_v2.app.beans.json.Request.InstInfoQueryRes;
-import com.laundrative_v2.app.beans.json.Response.InstDetailedRes;
-import com.laundrative_v2.app.beans.json.Response.InstListQueryRes;
+import com.laundrative_v2.app.beans.json.institution.request.InstDetailedReq;
+import com.laundrative_v2.app.beans.json.institution.response.InstInfoQueryRes;
+import com.laundrative_v2.app.beans.json.institution.response.InstDetailedRes;
+import com.laundrative_v2.app.beans.json.institution.response.InstListQueryRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;

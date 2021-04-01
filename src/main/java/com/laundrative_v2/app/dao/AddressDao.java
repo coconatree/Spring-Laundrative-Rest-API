@@ -1,13 +1,13 @@
 package com.laundrative_v2.app.dao;
 
-import com.laundrative_v2.app.beans.db.Address.CountyDb;
-import com.laundrative_v2.app.beans.db.Address.DistrictDb;
-import com.laundrative_v2.app.beans.db.Address.NeighborhoodDb;
-import com.laundrative_v2.app.beans.db.Address.ProvinceDb;
-import com.laundrative_v2.app.repository.CountyRepo;
-import com.laundrative_v2.app.repository.DistrictRepo;
-import com.laundrative_v2.app.repository.NeighborhoodRepo;
-import com.laundrative_v2.app.repository.ProvinceRepo;
+import com.laundrative_v2.app.beans.db.addressDb.CountyDb;
+import com.laundrative_v2.app.beans.db.addressDb.DistrictDb;
+import com.laundrative_v2.app.beans.db.addressDb.NeighborhoodDb;
+import com.laundrative_v2.app.beans.db.addressDb.ProvinceDb;
+import com.laundrative_v2.app.repository.addressRepo.CountyRepo;
+import com.laundrative_v2.app.repository.addressRepo.DistrictRepo;
+import com.laundrative_v2.app.repository.addressRepo.NeighborhoodRepo;
+import com.laundrative_v2.app.repository.addressRepo.ProvinceRepo;
 import com.sun.org.slf4j.internal.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

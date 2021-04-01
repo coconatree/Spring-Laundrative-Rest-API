@@ -1,18 +1,19 @@
 package com.laundrative_v2.app.dao;
 
-import com.laundrative_v2.app.beans.db.Institution.*;
+import com.laundrative_v2.app.beans.db.institutionDb.*;
 import com.laundrative_v2.app.beans.db.KindDb;
-import com.laundrative_v2.app.beans.json.CategoryKindTypeJson;
-import com.laundrative_v2.app.beans.json.Request.CategoryKind;
-import com.laundrative_v2.app.beans.json.Response.InstDetailedRes;
-import com.laundrative_v2.app.beans.json.Response.InstListQueryRes;
+import com.laundrative_v2.app.beans.json.institution.request.CategoryKind;
+import com.laundrative_v2.app.beans.json.institution.response.InstDetailedRes;
+import com.laundrative_v2.app.beans.json.institution.response.InstListQueryRes;
 
 import com.laundrative_v2.app.beans.json.Response.NeighborhoodInfo;
-import com.laundrative_v2.app.beans.json.Request.InstInfoQueryRes;
-import com.laundrative_v2.app.beans.json.Response.KindPrice;
+import com.laundrative_v2.app.beans.json.institution.response.InstInfoQueryRes;
+import com.laundrative_v2.app.beans.json.institution.response.KindPrice;
 
 
 import com.laundrative_v2.app.repository.*;
+import com.laundrative_v2.app.repository.addressRepo.NeighborhoodRepo;
+import com.laundrative_v2.app.repository.institutionRepo.*;
 import com.laundrative_v2.app.util.Utility;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
@@ -67,8 +68,6 @@ public class InstitutionDao
 
             serviceResult = institutionServiceRepo.searchBy(neighborhoodID);
 
-            serviceResult.forEach(p -> logger.warn(p.toString()));
-
             // Setting up the day and time data
 
             Calendar calendar = Calendar.getInstance();
@@ -82,9 +81,6 @@ public class InstitutionDao
                     new Time(clientDate.getTime()),
                     new Time(clientDate.getTime())
             ).forEach(p -> workingResult.add(p.getInstitutionId()));
-
-            logger.warn("SIZE AFTER WORKING : " + workingResult.size());
-            workingResult.forEach(p -> logger.warn(p.toString()));
 
             // Filtering for the categories and mapping to the response object and returning it
 

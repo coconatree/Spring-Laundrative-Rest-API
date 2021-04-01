@@ -1,6 +1,6 @@
 package com.laundrative_v2.app.beans.json.Response;
 
-import com.laundrative_v2.app.beans.db.Institution.InstitutionWorkingDb;
+import com.laundrative_v2.app.beans.db.institutionDb.InstitutionWorkingDb;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -8,10 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.*;
-
-import static com.laundrative_v2.app.configuration.UtilityConfig.*;
 
 public class Utility
 {

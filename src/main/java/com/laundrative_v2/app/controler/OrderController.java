@@ -1,13 +1,15 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.json.Request.OrderPostReq;
+import com.laundrative_v2.app.beans.json.order.request.OrderPostReq;
+import com.laundrative_v2.app.beans.json.order.response.OrderHistoryRes;
 import com.laundrative_v2.app.dao.OrderDao;
 import com.laundrative_v2.app.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -23,6 +25,28 @@ public class OrderController
 
         if(createdId != null)
             return Utility.createResponse("", createdId, HttpStatus.OK);
+        else
+            return Utility.createResponse("", null, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Object> getPastOrders(@PathVariable(value = "id") Long id)
+    {
+        List<OrderHistoryRes> orderHistoryRes = orderDao.get_Order_History(id);
+
+        if(orderHistoryRes != null)
+            return Utility.createResponse("", orderHistoryRes, HttpStatus.OK);
+        else
+            return Utility.createResponse("", null, HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<Object> deleteOrder(@PathVariable(value = "id") Long id)
+    {
+        boolean valid = orderDao.delete(id);
+
+        if(valid)
+            return Utility.createResponse("", "", HttpStatus.OK);
         else
             return Utility.createResponse("", null, HttpStatus.BAD_REQUEST);
     }

@@ -1,6 +1,6 @@
 package com.laundrative_v2.app.dao;
 
-import com.laundrative_v2.app.beans.db.CustomerAddressDb;
+import com.laundrative_v2.app.beans.db.customerDb.CustomerAddressDb;
 import com.laundrative_v2.app.beans.json.CustomerAddressJson;
 import com.laundrative_v2.app.repository.CustomerAddressRepo;
 import com.laundrative_v2.app.repository.CustomerRepo;

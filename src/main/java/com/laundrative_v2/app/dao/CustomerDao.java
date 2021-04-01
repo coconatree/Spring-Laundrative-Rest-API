@@ -1,6 +1,6 @@
 package com.laundrative_v2.app.dao;
 
-import com.laundrative_v2.app.beans.db.CustomerDb;
+import com.laundrative_v2.app.beans.db.customerDb.CustomerDb;
 import com.laundrative_v2.app.beans.json.CustomerJson;
 import com.laundrative_v2.app.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;

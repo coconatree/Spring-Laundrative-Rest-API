@@ -1,6 +1,6 @@
 package com.laundrative_v2.app.beans.json.Response;
 
-import com.laundrative_v2.app.beans.db.Address.NeighborhoodDb;
+import com.laundrative_v2.app.beans.db.addressDb.NeighborhoodDb;
 import lombok.*;
 
 @Data
