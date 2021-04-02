@@ -3,8 +3,8 @@ package com.laundrative_v2.app.beans.json.institution.response;
 
 import com.laundrative_v2.app.beans.db.institutionDb.InstitutionDb;
 import com.laundrative_v2.app.beans.db.institutionDb.InstitutionServiceDb;
-import com.laundrative_v2.app.beans.json.Response.NeighborhoodInfo;
-import com.laundrative_v2.app.beans.json.Response.WorkingHours2;
+import com.laundrative_v2.app.beans.json.institution.NeighborhoodInfo;
+import com.laundrative_v2.app.beans.json.will_be_sorted.WorkingHours2;
 import lombok.*;
 
 import java.math.BigDecimal;

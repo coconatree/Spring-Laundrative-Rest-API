@@ -5,7 +5,7 @@ import com.laundrative_v2.app.beans.db.KindDb;
 import com.laundrative_v2.app.beans.json.institution.request.CategoryKind;
 import com.laundrative_v2.app.beans.json.institution.response.*;
 
-import com.laundrative_v2.app.beans.json.Response.NeighborhoodInfo;
+import com.laundrative_v2.app.beans.json.institution.NeighborhoodInfo;
 
 
 import com.laundrative_v2.app.repository.*;
