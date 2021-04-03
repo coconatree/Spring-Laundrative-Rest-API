@@ -1,8 +1,8 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.json.address.AddressObject;
+import com.laundrative_v2.app.beans.json.customer.AddressObject;
 import com.laundrative_v2.app.dao.CustomerDao;
-import com.laundrative_v2.app.util.Utility;
+import com.laundrative_v2.app.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

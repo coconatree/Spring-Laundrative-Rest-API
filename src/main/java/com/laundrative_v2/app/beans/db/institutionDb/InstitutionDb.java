@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,18 +57,23 @@ public class InstitutionDb
         return validList.size() == categories.length;
     }
 
-    public boolean is_Open_In_The_Given_Day(int [] days)
+    public boolean isOpenInTheGivenDays(int [] days)
     {
         ArrayList<Boolean> validList = new ArrayList<>();
 
         for (int day : days)
         {
-            if(institutionWorkingList.stream().filter(e -> e.getDay() == day).collect(Collectors.toList()).size() == 1);
+            if(validateIfWorking(day));
             {
                 validList.add(true);
             }
         }
         return validList.size() == days.length;
+    }
+
+    private boolean validateIfWorking(int day)
+    {
+        return (institutionWorkingList.stream().filter(e -> e.getDay() == day).collect(Collectors.toList()).size() == 1);
     }
 
     public boolean has_Free_Service_For_The_Neighborhood(Long neighborhoodId)

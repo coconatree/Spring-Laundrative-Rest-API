@@ -1,4 +1,4 @@
-package com.laundrative_v2.app.util;
+package com.laundrative_v2.app.utility;
 
 import lombok.Getter;
 import lombok.Setter;

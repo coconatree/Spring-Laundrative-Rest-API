@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class KindPrice
 {
+    private Long categoryId;
     private Long kindId;
     private String kindName;
     private String kindImage;
@@ -20,7 +21,12 @@ public class KindPrice
 
     public static KindPrice from(KindDb db)
     {
+        //TODO
+        // Change the default values
+
         KindPrice kindPrice = new KindPrice();
+
+        kindPrice.setCategoryId(db.getCategory());
         kindPrice.setKindId(db.getId());
         kindPrice.setKindName(db.getName());
         kindPrice.setKindImage(db.getImage());

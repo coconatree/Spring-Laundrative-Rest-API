@@ -4,7 +4,7 @@ import com.laundrative_v2.app.beans.db.institutionDb.InstitutionDb;
 import com.laundrative_v2.app.beans.db.institutionDb.InstitutionServiceDb;
 import com.laundrative_v2.app.beans.db.institutionDb.InstitutionWorkingDb;
 import com.laundrative_v2.app.beans.json.institution.NeighborhoodInfo;
-import com.laundrative_v2.app.beans.json.will_be_sorted.WorkingHours;
+import com.laundrative_v2.app.beans.json.institution.WorkingHours;
 import lombok.*;
 
 import java.util.Calendar;

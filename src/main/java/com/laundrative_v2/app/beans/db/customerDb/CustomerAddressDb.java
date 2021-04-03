@@ -1,6 +1,6 @@
 package com.laundrative_v2.app.beans.db.customerDb;
 
-import com.laundrative_v2.app.beans.json.address.AddressObject;
+import com.laundrative_v2.app.beans.json.customer.AddressObject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

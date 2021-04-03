@@ -1,4 +1,4 @@
-package com.laundrative_v2.app.beans.json.will_be_sorted;
+package com.laundrative_v2.app.beans.json.institution;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

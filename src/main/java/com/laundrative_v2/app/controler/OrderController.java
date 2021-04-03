@@ -3,7 +3,7 @@ package com.laundrative_v2.app.controler;
 import com.laundrative_v2.app.beans.json.order.request.OrderPostReq;
 import com.laundrative_v2.app.beans.json.order.response.OrderHistoryRes;
 import com.laundrative_v2.app.dao.OrderDao;
-import com.laundrative_v2.app.util.Utility;
+import com.laundrative_v2.app.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

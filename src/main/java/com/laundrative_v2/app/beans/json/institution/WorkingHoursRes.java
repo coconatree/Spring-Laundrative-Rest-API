@@ -1,4 +1,4 @@
-package com.laundrative_v2.app.beans.json.institution.response;
+package com.laundrative_v2.app.beans.json.institution;
 
 
 import com.laundrative_v2.app.beans.db.institutionDb.InstitutionWorkingDb;

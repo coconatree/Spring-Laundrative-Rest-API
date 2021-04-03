@@ -19,6 +19,10 @@ public class CustomerDb
     private Long id;
     @Column(name = "adi")
     private String name;
+
+    @Column(name = "sifre")
+    private String password;
+
     @Column(name = "telefon")
     private String telephone;
     @Column(name = "email")
@@ -34,5 +38,25 @@ public class CustomerDb
     @Column(name = "indirim_orani")
     private Integer discountPercentage;
 
+    @Column(name = "secret_key")
+    private String secretKey;
+
     public CustomerDb() {}
+
+    public static boolean valid(CustomerDb customerDb, String db, String client)
+    {
+        System.out.println("isNull : " + isNull(customerDb));
+        System.out.println("matches : " + passwordMatches(db, client));
+
+        return isNull(customerDb) && passwordMatches(db, client);
+    }
+    private static boolean isNull(CustomerDb customer)
+    {
+        return !(customer == null);
+    }
+
+    private static boolean passwordMatches(String db, String client)
+    {
+        return db.equals(client);
+    }
 }

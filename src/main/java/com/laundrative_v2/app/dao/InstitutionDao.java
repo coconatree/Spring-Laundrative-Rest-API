@@ -2,7 +2,9 @@ package com.laundrative_v2.app.dao;
 
 import com.laundrative_v2.app.beans.db.institutionDb.*;
 import com.laundrative_v2.app.beans.db.KindDb;
+import com.laundrative_v2.app.beans.json.institution.WorkingHoursRes;
 import com.laundrative_v2.app.beans.json.institution.request.CategoryKind;
+import com.laundrative_v2.app.beans.json.institution.response.KindPrice;
 import com.laundrative_v2.app.beans.json.institution.response.*;
 
 import com.laundrative_v2.app.beans.json.institution.NeighborhoodInfo;
@@ -11,7 +13,7 @@ import com.laundrative_v2.app.beans.json.institution.NeighborhoodInfo;
 import com.laundrative_v2.app.repository.*;
 import com.laundrative_v2.app.repository.addressRepo.NeighborhoodRepo;
 import com.laundrative_v2.app.repository.institutionRepo.*;
-import com.laundrative_v2.app.util.Utility;
+import com.laundrative_v2.app.utility.Utility;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,160 +104,84 @@ public class InstitutionDao
 
     public List<InstInfoQueryRes> read(Long institutionId)
     {
-        try
-        {
-            List<InstitutionKindDb> institutionKindDbList;
-            List<InstInfoQueryRes>  response = new ArrayList<>();
+        List<Long> kindIds;
+        List<InstInfoQueryRes>  responseList;
 
-            // Getting all the necessary information about the institution
+        // Finding the institution
 
-            institutionKindDbList = institutionKindRepo.findAllByInstitutionId(institutionId);
-
-            // Getting all the necessary information about the related categories and kinds
-            // And building the response object
-
-            try
-            {
-                InstitutionDb institutionDb = null;
-                ArrayList<KindDb> kindDbArray = null;
-
-                // Getting all the necessary information about the institution
-
-                institutionDb = institutionRepo.findById(institutionId).get();
-
-                ArrayList<InstitutionKindDb> institutionKindDbArr = new ArrayList<>(
-                        institutionKindRepo.findAllByInstitutionId(institutionId)
+        kindIds = institutionKindRepo.findAllByInstitutionId(institutionId).stream()
+                .map(e -> e.getKindId())
+                .collect(Collectors.toList()
                 );
 
-                // Getting all the necessary information about the related categories and kinds
-                // And building the response object
+        //TODO
+        // change this when there will be test date
 
-                InstInfoQueryRes res = null;
-                KindPrice kindPrice = null;
+        List<KindDb> kindList = kindRepo.findAllByInstitutionId(0L);
 
-                response = new ArrayList<>();
+        return kindList.stream()
+                .map(e -> InstInfoQueryRes.from(e))
+                .collect(Collectors.toList());
 
-                for (InstitutionKindDb element : institutionKindDbArr)
-                {
-                    Long category_Id  = element.getKindCategoryId();
-
-                    //TODO
-                    //Old One
-                    //- findAllByCategoryAndId
-
-                    kindDbArray = new ArrayList<>(kindRepo.findAllByInstitutionId(0L));
-
-                    res = new InstInfoQueryRes();
-                    res.setCategoryId(category_Id);
-
-                    for (KindDb kindElement : kindDbArray)
-                    {
-                        kindPrice = new KindPrice();
-
-                        kindPrice.setKindId(kindElement.getId());
-                        kindPrice.setKindName(kindElement.getName());
-
-                        Utility utility = Utility.getInstance();
-
-                        kindPrice.setKindImage(utility.imageToBase64(kindElement.getImage()));
-                        kindPrice.setType(null);
-                        kindPrice.setPrice(new BigDecimal(0));
-
-                        res.add(kindPrice);
-                    }
-                    response.add(res);
-                }
-                return response;
-            }
-            catch (Exception e)
-            {
-                logger.warn("Error cause : \n " + e.getCause());
-                logger.warn("Error message : \n " + e.getMessage());
-                logger.warn("Error stack trace : \n " + e.getStackTrace());
-
-                return null;
-            }
-        }
-        catch (Exception e)
-        {
-            logger.warn("Error cause : \n " + e.getCause());
-            logger.warn("Error message : \n " + e.getMessage());
-            logger.warn("Error stack trace : \n " + e.getStackTrace());
-
-            return null;
-        }
     }
 
-    public List<InstDetailedRes> detailedSearch(Long neighborhoodId, Date receivingDate, Date deliveryDate, CategoryKind [] array, boolean freeService)
+    public List<InstDetailedRes> detailedSearch(Long neighborhoodId, Date receivingDate, Date deliveryDate, CategoryKind[] array, boolean freeService)
     {
-        try
+
+        //TODO
+        // Add free service filtering
+
+        NeighborhoodInfo neighborhoodInfo = NeighborhoodInfo.from(neighborhoodRepo.findById(neighborhoodId).get());
+
+        int [] days = new int[2];
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(receivingDate);
+        days[0] = calendar.get(Calendar.DAY_OF_WEEK);
+        calendar.setTime(deliveryDate);
+        days[1] = calendar.get(Calendar.DAY_OF_WEEK);
+
+        // All the institutions which are working at the given neighborhood
+
+        List<Long> initialIds = institutionServiceRepo.searchBy(neighborhoodId);
+
+        // Filtering the institutions according to the date
+
+        //TODO
+        // Should directly return the id column
+
+        List<InstitutionDb> institutionDbList = institutionRepo.findAllByIdIn(initialIds)
+                .stream()
+                .filter(e -> e.isOpenInTheGivenDays(days))
+                .collect(Collectors.toList());
+
+        List<Long> IDS = institutionDbList.stream().map(e -> e.getId()).collect(Collectors.toList());
+
+        List<Long> resultSet = new ArrayList<>();
+
+        int counter = 0;
+
+        for (Long id : IDS)
         {
-            // Getting the neighborhood info
-
-            logger.warn("NEIG ID : " + neighborhoodId + " DATE 1 : " + receivingDate + " DATE 2 : " + deliveryDate);
-            logger.warn("ARRAY : \n");
-            Arrays.stream(array).forEach(e -> logger.warn("ITEM : " + e));
-            logger.warn("BOOLEAN : " + freeService);
-
-            NeighborhoodInfo neighborhoodInfo = NeighborhoodInfo.from(neighborhoodRepo.findById(neighborhoodId).get());
-
-            logger.warn("NEIGH INFO : " + neighborhoodInfo);
-
-            int [] days = new int[2];
-
-            Calendar calendar = Calendar.getInstance();
-
-            calendar.setTime(receivingDate);
-            days[0] = calendar.get(Calendar.DAY_OF_WEEK);
-            calendar.setTime(deliveryDate);
-            days[1] = calendar.get(Calendar.DAY_OF_WEEK);
-
-            List<Long> initialIds = institutionServiceRepo.searchBy(neighborhoodId);
-
-            logger.warn("INITIAL IDS : ");
-            initialIds.stream().forEach(e -> logger.warn("ITEM : " + e));
-
-            // Will change the following
-
-            List<Long> ids_Of_Open_And_Serving_To_The_Neighborhood = new ArrayList<>();
-
-            int counter = 0;
-
-            institutionRepo.findAllByIdIn(initialIds).stream().forEach(e -> logger.warn("HAS BEEN FOUND IN THE INITIAL SEARCH : " + e.getInstitutionName()));
-
-            for (Long id : initialIds)
+            for (CategoryKind element : array)
             {
-                for (CategoryKind element : array)
+                if(institutionKindRepo.existsByInstitutionIdAndKindIdAndKindCategoryId(id, element.getKindId(), element.getCategoryId()))
                 {
-                    if(institutionKindRepo.existsByInstitutionIdAndKindIdAndKindCategoryId(
-                            id,
-                            element.getKindId(),
-                            element.getCategoryId()))
-                    {
-                        logger.warn("FOUND : " + element);
-                        counter++;
-                    }
-                    logger.warn("TURNING FOR " + element);
+                    counter++;
                 }
-                if(counter == array.length)
-                {
-                    logger.warn("ADDED : " + id);
-                    ids_Of_Open_And_Serving_To_The_Neighborhood.add(id);
-                }
-                counter = 0;
             }
-
-            // Will ask the freeServices working principle
-
-            return institutionRepo.findAllByIdIn(
-                    ids_Of_Open_And_Serving_To_The_Neighborhood
-            ).stream().filter(e -> e.is_Open_In_The_Given_Day(days)).map(i -> InstDetailedRes.from(i, neighborhoodInfo)).collect(Collectors.toList());
+            if(counter == array.length)
+            {
+                resultSet.add(id);
+            }
+            counter = 0;
         }
-        catch (Exception e)
-        {
-            logger.warn(e.getMessage());
-        }
-        return null;
+
+        return institutionRepo.findAllByIdIn(resultSet)
+                .stream()
+                .map(i -> InstDetailedRes.from(i, neighborhoodInfo))
+                .collect(Collectors.toList());
     }
 
     public List<WorkingHoursRes> getWorkingHours(Long id)

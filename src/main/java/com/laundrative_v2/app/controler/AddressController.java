@@ -5,7 +5,7 @@ import com.laundrative_v2.app.beans.db.addressDb.DistrictDb;
 import com.laundrative_v2.app.beans.db.addressDb.NeighborhoodDb;
 import com.laundrative_v2.app.beans.db.addressDb.ProvinceDb;
 import com.laundrative_v2.app.dao.AddressDao;
-import com.laundrative_v2.app.util.Utility;
+import com.laundrative_v2.app.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

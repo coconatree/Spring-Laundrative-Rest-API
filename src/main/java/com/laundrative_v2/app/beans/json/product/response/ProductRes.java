@@ -1,7 +1,7 @@
 package com.laundrative_v2.app.beans.json.product.response;
 
 import com.laundrative_v2.app.beans.db.KindDb;
-import com.laundrative_v2.app.util.Utility;
+import com.laundrative_v2.app.utility.Utility;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

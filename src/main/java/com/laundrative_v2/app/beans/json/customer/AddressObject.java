@@ -1,4 +1,4 @@
-package com.laundrative_v2.app.beans.json.address;
+package com.laundrative_v2.app.beans.json.customer;
 
 
 import com.laundrative_v2.app.beans.db.customerDb.CustomerAddressDb;

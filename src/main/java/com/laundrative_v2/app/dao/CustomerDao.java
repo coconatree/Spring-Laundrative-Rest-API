@@ -2,14 +2,14 @@ package com.laundrative_v2.app.dao;
 
 import com.laundrative_v2.app.beans.db.customerDb.CustomerAddressDb;
 import com.laundrative_v2.app.beans.db.customerDb.CustomerDb;
-import com.laundrative_v2.app.beans.json.CustomerJson;
-import com.laundrative_v2.app.beans.json.address.AddressObject;
+import com.laundrative_v2.app.beans.json.customer.AddressObject;
+import com.laundrative_v2.app.beans.json.customer.CustomerDetails;
 import com.laundrative_v2.app.repository.customerRepo.CustomerAddressRepo;
 import com.laundrative_v2.app.repository.customerRepo.CustomerRepo;
+import com.laundrative_v2.app.utility.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

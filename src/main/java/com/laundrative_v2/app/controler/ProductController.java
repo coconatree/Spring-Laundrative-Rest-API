@@ -3,7 +3,7 @@ package com.laundrative_v2.app.controler;
 
 import com.laundrative_v2.app.beans.json.product.response.ProductRes;
 import com.laundrative_v2.app.dao.ProductDao;
-import com.laundrative_v2.app.util.Utility;
+import com.laundrative_v2.app.utility.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

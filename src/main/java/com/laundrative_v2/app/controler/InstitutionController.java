@@ -4,9 +4,11 @@ import com.laundrative_v2.app.beans.json.institution.request.InstDetailedReq;
 import com.laundrative_v2.app.beans.json.institution.response.InstInfoQueryRes;
 import com.laundrative_v2.app.beans.json.institution.response.InstDetailedRes;
 import com.laundrative_v2.app.beans.json.institution.response.InstListQueryRes;
-import com.laundrative_v2.app.beans.json.institution.response.WorkingHoursRes;
+import com.laundrative_v2.app.beans.json.institution.WorkingHoursRes;
 import com.laundrative_v2.app.dao.InstitutionDao;
-import com.laundrative_v2.app.util.Utility;
+import com.laundrative_v2.app.dao.LoginDao;
+import com.laundrative_v2.app.utility.JWTUtil;
+import com.laundrative_v2.app.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -38,8 +40,14 @@ public class InstitutionController
             return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Autowired
+    LoginDao login_Service;
+
+    @Autowired
+    JWTUtil utility_JWT;
+
     @GetMapping("/{institutionId}")
-    public ResponseEntity<Object> getById(@PathVariable(value = "institutionId") Long institutionId)
+    public ResponseEntity<Object> getById(@RequestHeader("Authorization") String token, @PathVariable(value = "institutionId") Long institutionId)
     {
         List<InstInfoQueryRes> response = institutionDao.read(institutionId);
 
