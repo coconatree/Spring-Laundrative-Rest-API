@@ -15,6 +15,9 @@ public class AddressDao
     @Autowired
     private ProvinceRepo repositoryP;
 
+    @Autowired
+    private NeighborhoodRepo repositoryN;
+
     public List<ProvinceDb> getAllProvince()
     {
         return repositoryP.findAllProvince();
@@ -24,9 +27,6 @@ public class AddressDao
     {
         return repositoryP.getAllFromProvinceId(provinceId);
     }
-
-    @Autowired
-    private NeighborhoodRepo repositoryN;
 
     public NeighborhoodDb getNeighborhoodById(Long id)
     {

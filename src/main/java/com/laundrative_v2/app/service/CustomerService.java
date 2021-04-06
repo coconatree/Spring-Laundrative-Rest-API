@@ -2,10 +2,13 @@ package com.laundrative_v2.app.service;
 
 import com.laundrative_v2.app.beans.db.customerDb.CustomerDb;
 import com.laundrative_v2.app.beans.db.customerDb.CustomerDeletedDb;
+import com.laundrative_v2.app.beans.json.address.request.AddressAddReq;
+import com.laundrative_v2.app.beans.json.customer.AddressObject;
 import com.laundrative_v2.app.beans.json.customer.request.CustomerDelReq;
 import com.laundrative_v2.app.beans.json.customer.request.CustomerPostReq;
 import com.laundrative_v2.app.beans.json.customer.response.CustomerInfoRes;
 import com.laundrative_v2.app.dao.CustomerDao;
+import com.laundrative_v2.app.exception.CustomerDoesntOwnTheAddress;
 import com.laundrative_v2.app.exception.EmailNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +21,10 @@ import java.util.List;
 public class CustomerService
 {
     @Autowired
-    CustomerDao customerDao;
+    private CustomerDao customerDao;
+
+    @Autowired
+    private AddressService addressService;
 
 
     public CustomerInfoRes info(String email)
@@ -63,10 +69,34 @@ public class CustomerService
         customerDao.delete(originalCustomer);
     }
 
-    public void saveAddress(){}
-    public void updateAddress(){}
-    public void deleteAddress(){}
+    public Long saveAddress(String email, AddressAddReq address)
+    {
+        return addressService.saveCustomerAddress(findCustomerByEmail(email).getId(), address);
+    }
 
-    public void gatAllAddresses(){}
+    public void updateAddress(String email, Long addressId, AddressAddReq address)
+    {
+        validate(email, addressId);
+        addressService.updateCustomerAddress(addressId, address);
+    }
+
+    public void deleteAddress(String email, Long addressId)
+    {
+        validate(email, addressId);
+        addressService.deleteCustomerAddress(addressId);
+    }
+
+    public List<AddressObject> getAllAddresses(String email)
+    {
+        return addressService.getAllCustomerAddresses(findCustomerByEmail(email));
+    }
+
+    private void validate(String email, Long addressId)
+    {
+        if(!addressService.owns(findCustomerByEmail(email).getId(), addressId))
+        {
+            throw new CustomerDoesntOwnTheAddress("Authentication Failed", HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 }

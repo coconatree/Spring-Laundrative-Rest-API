@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/na/address")
@@ -30,7 +31,10 @@ public class AddressController
     @GetMapping(value = "/province")
     public ResponseEntity<Object> getAllProvince()
     {
-        List<AddressProvinceRes> response = service.findAllProvinces();
+        List<AddressProvinceRes> response = service.findAllProvinces()
+                .stream()
+                .map(e -> AddressProvinceRes.from(e))
+                .collect(Collectors.toList());
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);

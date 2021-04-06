@@ -1,5 +1,6 @@
 package com.laundrative_v2.app.beans.db.customerDb;
 
+import com.laundrative_v2.app.beans.json.address.request.AddressAddReq;
 import com.laundrative_v2.app.beans.json.customer.AddressObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,13 +26,20 @@ public class CustomerAddressDb
     @Column(name = "adres")
     private String address;
     @Column(name = "teslim_alma")
-    private int receiving;
+    private Integer receiving;
     @Column(name = "teslim_etme")
-    private int handingOver;
+    private Integer handingOver;
+    @Column(name = "aktif")
+    private Integer active;
 
     public CustomerAddressDb(){}
 
-    public static CustomerAddressDb from(Long customerId, AddressObject request)
+    public void delete()
+    {
+        this.active = 0;
+    }
+
+    public static CustomerAddressDb from(Long customerId, AddressAddReq request)
     {
         CustomerAddressDb customerAddressDb = new CustomerAddressDb();
 
@@ -40,21 +48,18 @@ public class CustomerAddressDb
         customerAddressDb.setAddress(request.getAddress());
         customerAddressDb.setReceiving(request.getIsReceivingAddress());
         customerAddressDb.setHandingOver(request.getIsDeliveryAddress());
+        customerAddressDb.setActive(1);
 
         return customerAddressDb;
     }
 
-    public static CustomerAddressDb updateFrom(Long customerId, AddressObject request)
+    public static CustomerAddressDb updateFrom(CustomerAddressDb original, AddressAddReq request)
     {
-        CustomerAddressDb customerAddressDb = new CustomerAddressDb();
+        original.setNeighborhoodId(request.getNeighborhoodId());
+        original.setAddress(request.getAddress());
+        original.setReceiving(request.getIsReceivingAddress());
+        original.setHandingOver(request.getIsDeliveryAddress());
 
-        customerAddressDb.setCustomerId(customerId);
-        customerAddressDb.setId(request.getId());
-        customerAddressDb.setNeighborhoodId(request.getNeighborhoodId());
-        customerAddressDb.setAddress(request.getAddress());
-        customerAddressDb.setReceiving(request.getIsReceivingAddress());
-        customerAddressDb.setHandingOver(request.getIsDeliveryAddress());
-
-        return customerAddressDb;
+        return original;
     }
 }
