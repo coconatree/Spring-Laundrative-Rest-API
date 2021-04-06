@@ -45,6 +45,7 @@ public interface InstitutionRepo extends JpaRepository<InstitutionDb, Long>
     List<Long> isOpenAndWorking(@Param("instIdList") List<Long> instIdList,
                                 @Param("day") Integer day
     );
+
     @Query(value = "select k.id from kurum k join kurum_hizmet kh on k.id = kh.kurum_id where kh.mahalle_id = :idN", nativeQuery = true)
     List<Long> findAllByNeighborhoodId(@Param("idN") Long idN);
 }

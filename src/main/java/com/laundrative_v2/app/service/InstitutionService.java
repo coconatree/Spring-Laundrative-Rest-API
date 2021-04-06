@@ -45,7 +45,7 @@ public class InstitutionService
                 .filter(e -> e.containsCategories(instSearchReq.getCategories()))
                 .map(x ->
                 {
-                    if(favoriteList.isEmpty() && favoriteList.contains(x.getId()))
+                    if(!favoriteList.isEmpty() && favoriteList.contains(x.getId()))
                         return InstListQueryRes.from(x, neighborhoodInfo, instSearchReq.getDate(), true);
                     else
                         return InstListQueryRes.from(x, neighborhoodInfo, instSearchReq.getDate(), false);
