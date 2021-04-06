@@ -1,3 +1,10 @@
+# CHANGES DATABASE IN THE DATABASE
+
+### silinen_musteri tablosu
+* id auto increament yapıldı
+* eski_musteri_id eklendi
+* musteri_silinme_nedeni_baslık eklendi
+
 ## IMPORTANT
 ## PORT NUMBER HAS BEEN CHANGE 
 ## DONT FORGET TO CHAGE IT BACK TO 23000
