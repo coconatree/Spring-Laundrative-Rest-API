@@ -60,9 +60,9 @@ public class InstitutionDao
         return repository.getProductListAsKindCategoryByNeighborhoodId(neighborhoodId);
     }
 
-    public List<Long> detailedSearch(List<Long> idList, Long categoryId, Long kindId)
+    public Boolean detailedSearch(Long instId, Long categoryId, Long kindId)
     {
-        return kindRepository.detailedSearch(idList, categoryId, kindId);
+        return kindRepository.existsByInstitutionIdAndKindCategoryIdAndKindId(instId, categoryId, kindId);
     }
 
     public List<InstitutionWorkingDb> isWorkingAndOpen(List<Long> instIdList, Integer day)

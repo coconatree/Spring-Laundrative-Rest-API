@@ -17,6 +17,8 @@ public interface InstitutionKindRepo extends JpaRepository<InstitutionKindDb, Lo
     List<Long> detailedSearch(@Param("list") List<Long> list, @Param("categoryId") Long categoryId , @Param("kindId") Long kindId);
     List<InstitutionKindDb> findAllByInstitutionId(Long id);
 
+    Boolean existsByInstitutionIdAndKindCategoryIdAndKindId(Long instId, Long categoryId, Long kindId);
+
     // List<InstitutionKindDb> findAllByInstitutionIdInAndAndKindCategoryIdAndKindId(List<Long> list, Long categoryId, Long kindId);
 
     //

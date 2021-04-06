@@ -87,29 +87,28 @@ public class InstitutionService
 
         // Getting the final institutions
 
-        List<InstitutionDb> responseList = new ArrayList<>();
-
-        List<Long> resultSet;
-        List<Long> filter;
+        List<Long> responseList = new ArrayList<>();
 
         CategoryKindBlock[] blocks = request.getBlocks();
 
-        for (CategoryKindBlock block : blocks)
+        int counter;
+
+        for (Long id : isOpenListDayOneAndTwo)
         {
-            filter = institutionDao.detailedSearch(isOpenListDayOneAndTwo, block.getIdC(), block.getIdK());
-            if(filter.size() <= blocks.length)
+            counter = 0;
+
+            for (CategoryKindBlock block : blocks)
             {
-                responseList = filter.stream().map(x -> institutionDao.findById(x)).collect(Collectors.toList());
-                break;
+                if(institutionDao.detailedSearch(id, block.getIdC(), block.getIdK()))
+                    counter += 1;
+            }
+            if (counter == blocks.length)
+            {
+                responseList.add(id);
             }
         }
 
-        // TODO
-        // FIXME
-
-        responseList.forEach(e -> System.out.println(e));
-
-        return responseList.stream().map(z -> InstDetailedRes.from(z, infoN)).collect(Collectors.toList());
+        return responseList.stream().map(id -> institutionDao.findById(id)).map(z -> InstDetailedRes.from(z, infoN)).collect(Collectors.toList());
     }
 
     public List<ProductRes> searchInstitutionProduct(InstProdSearchReq instProdSearchReq)
