@@ -2,6 +2,8 @@ package com.laundrative_v2.app.security;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.laundrative_v2.app.exception.CredentialFormatIsWrong;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,9 +38,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         {
             credentials = new ObjectMapper().readValue(request.getInputStream(), LoginDetails.class);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
-            return null;
+            throw new CredentialFormatIsWrong("Credentials format is wrong", HttpStatus.BAD_REQUEST);
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

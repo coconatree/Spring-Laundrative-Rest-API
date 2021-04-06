@@ -5,6 +5,8 @@ import com.laundrative_v2.app.beans.json.customer.request.CustomerPostReq;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 @Entity
@@ -37,7 +39,7 @@ public class CustomerDb
     @Column(name = "indirim_tipi")
     private Integer discountType;
     @Column(name = "indirim_orani")
-    private Integer discountPercentage;
+    private BigDecimal discountPercentage;
 
     @Column(name = "aktif")
     private Integer active;
@@ -67,7 +69,7 @@ public class CustomerDb
         customer.setCreationDate(new Date(System.currentTimeMillis()));
         customer.setUpdateDate(null);
         customer.setDiscountType(0);
-        customer.setDiscountPercentage(0);
+        customer.setDiscountPercentage(new BigDecimal(0.12));
 
         // Setting the customer as active
 

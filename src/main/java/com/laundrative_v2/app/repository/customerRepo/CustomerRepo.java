@@ -3,11 +3,14 @@ package com.laundrative_v2.app.repository.customerRepo;
 import com.laundrative_v2.app.beans.db.customerDb.CustomerDb;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface CustomerRepo extends JpaRepository<CustomerDb, Long>
+@Repository
+public interface CustomerRepo extends CrudRepository<CustomerDb, Long>
 {
     @Query(value = "select * from musteri where musteri.email = :email and musteri.aktif = 1", nativeQuery = true)
     CustomerDb findByEmailCustom(@Param("email") String email);

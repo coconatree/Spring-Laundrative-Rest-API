@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class DeleteFormReq
+public class CustomerDelReq
 {
+    private String title;
     private String reason;
-    private String explanation;
 }

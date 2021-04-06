@@ -5,8 +5,9 @@ import com.laundrative_v2.app.beans.db.orderDb.OrderDetailsDb;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface MobileOrderRepo extends CrudRepository<MobileOrderDb, Long>
 {
     @Query(value = "delete o from mobile_siparis o where o.siparis_id = :orderId", nativeQuery = true)

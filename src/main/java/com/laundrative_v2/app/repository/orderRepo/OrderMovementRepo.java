@@ -4,10 +4,12 @@ import com.laundrative_v2.app.beans.db.orderDb.OrderMovementDb;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Repository
 public interface OrderMovementRepo extends CrudRepository<OrderMovementDb, Long>
 {
     @Query(value = "delete o from siparis_hareket o where o.siparis_id = :orderId", nativeQuery = true)

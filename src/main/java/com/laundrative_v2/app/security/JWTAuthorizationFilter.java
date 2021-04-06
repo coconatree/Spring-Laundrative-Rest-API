@@ -2,7 +2,10 @@ package com.laundrative_v2.app.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.laundrative_v2.app.exception.EmailNotFoundException;
+import com.laundrative_v2.app.exception.TokenNotFound;
 import com.laundrative_v2.app.repository.customerRepo.CustomerRepo;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -66,8 +69,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, principal.getAuthorities());
                 return auth;
             }
-            return null;
+            throw new EmailNotFoundException("Please Authenticate Again", HttpStatus.UNAUTHORIZED);
         }
-        return null;
+        throw new TokenNotFound("Token Not Found", HttpStatus.UNAUTHORIZED);
     }
 }

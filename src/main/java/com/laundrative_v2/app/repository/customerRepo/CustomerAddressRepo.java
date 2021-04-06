@@ -4,9 +4,11 @@ import com.laundrative_v2.app.beans.db.customerDb.CustomerAddressDb;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface CustomerAddressRepo extends JpaRepository<CustomerAddressDb, Long>
 {
     @Query(value = "select * from musteri_adres a where a.musteri_id = :customerId", nativeQuery = true)

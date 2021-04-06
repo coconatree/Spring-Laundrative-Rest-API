@@ -1,9 +1,14 @@
 package com.laundrative_v2.app.service;
 
 import com.laundrative_v2.app.beans.db.customerDb.CustomerDb;
+import com.laundrative_v2.app.beans.db.customerDb.CustomerDeletedDb;
+import com.laundrative_v2.app.beans.json.customer.request.CustomerDelReq;
 import com.laundrative_v2.app.beans.json.customer.request.CustomerPostReq;
+import com.laundrative_v2.app.beans.json.customer.response.CustomerInfoRes;
 import com.laundrative_v2.app.dao.CustomerDao;
+import com.laundrative_v2.app.exception.EmailNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -15,9 +20,20 @@ public class CustomerService
     @Autowired
     CustomerDao customerDao;
 
-    public CustomerDb findCustomerByEmail(String email)
+
+    public CustomerInfoRes info(String email)
     {
-        return customerDao.findByEmail(email);
+        return CustomerInfoRes.from(findCustomerByEmail(email));
+    }
+
+    public CustomerDb findCustomerByEmail(String email) throws EmailNotFoundException
+    {
+        CustomerDb customer = customerDao.findByEmail(email);
+
+        if(customer == null)
+            throw new EmailNotFoundException("Authentication Error", HttpStatus.UNAUTHORIZED);
+        else
+            return customer;
     }
 
     public List<Long> getFavoriteInstitutionIds(String email)
@@ -38,9 +54,17 @@ public class CustomerService
         customerDao.update(CustomerDb.updateFrom(request, customer, customer.getId()));
     }
 
-    public void deleteCustomer(String email)
+    public void deleteCustomer(String email, CustomerDelReq requestBody)
     {
-        //
+        CustomerDb originalCustomer = findCustomerByEmail(email);
+
+        if(originalCustomer == null)
+            throw new EmailNotFoundException("Authentication Failed", HttpStatus.UNAUTHORIZED);
+
+        CustomerDeletedDb deletedCustomer = CustomerDeletedDb.from(originalCustomer, requestBody);
+
+        customerDao.saveToDeleted(deletedCustomer);
+        customerDao.delete(originalCustomer);
     }
 
     public void saveAddress(){}
@@ -48,4 +72,5 @@ public class CustomerService
     public void deleteAddress(){}
 
     public void gatAllAddresses(){}
+
 }

@@ -3,7 +3,7 @@ package com.laundrative_v2.app.controler;
 import com.laundrative_v2.app.beans.db.customerDb.CustomerDb;
 import com.laundrative_v2.app.beans.json.customer.AddressObject;
 import com.laundrative_v2.app.beans.json.customer.request.CustomerPostReq;
-import com.laundrative_v2.app.beans.json.customer.request.DeleteFormReq;
+import com.laundrative_v2.app.beans.json.customer.request.CustomerDelReq;
 import com.laundrative_v2.app.beans.json.customer.response.CustomerInfoRes;
 import com.laundrative_v2.app.dao.CustomerDao;
 import com.laundrative_v2.app.service.CustomerService;
@@ -19,17 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 public class CustomerController
 {
     @Autowired
-    CustomerDao customerDao;
-
-    @Autowired
     CustomerService service;
 
     @PostMapping(value= "/na/customer/register")
     public ResponseEntity<Object> register(@RequestBody CustomerPostReq request)
     {
-        Long id = customerDao.register(CustomerDb.from(request));
+        Long id = service.registerCustomer(request);
 
-        if(id != null)
+        if(id == null)
         {
             return Utility.createResponse("", "", HttpStatus.BAD_REQUEST);
         }
@@ -40,7 +37,7 @@ public class CustomerController
     @GetMapping(value= "/customer")
     public ResponseEntity<Object> getCustomerInfo(HttpServletRequest request)
     {
-        CustomerInfoRes response  = customerDao.info(request.getUserPrincipal().getName());
+        CustomerInfoRes response  = service.info(request.getUserPrincipal().getName());
 
         if(response == null)
         {
@@ -57,15 +54,13 @@ public class CustomerController
         return Utility.createResponse("", "", HttpStatus.OK);
     }
 
+    @Autowired
+    private CustomerDao customerDao;
+
     @DeleteMapping(value = "/")
-    public ResponseEntity<Object> deleteCustomer(HttpServletRequest request, @RequestBody DeleteFormReq form)
+    public ResponseEntity<Object> deleteCustomer(HttpServletRequest request, @RequestBody CustomerDelReq requestBody) throws Exception
     {
-        System.out.println(form.getReason());
-        System.out.println(form.getExplanation());
-
-        // Form will be saved
-
-        customerDao.delete(request.getUserPrincipal().getName());
+        service.deleteCustomer(request.getUserPrincipal().getName(), requestBody);
 
         return Utility.createResponse("", "", HttpStatus.OK);
     }

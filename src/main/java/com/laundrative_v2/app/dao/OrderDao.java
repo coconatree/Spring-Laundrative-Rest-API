@@ -32,6 +32,11 @@ public class OrderDao
     @Autowired
     MobileOrderRepo mobileOrderRepo;
 
+    public void getHistory(){}
+    public void saveOrder(){}
+    public void updateOrder(){}
+    public void deleteOrder(){}
+
     public Long save(OrderPostReq request)
     {
         if (request.getOldOrderId() != null)

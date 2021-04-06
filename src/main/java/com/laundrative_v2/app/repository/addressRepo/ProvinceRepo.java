@@ -4,9 +4,11 @@ import com.laundrative_v2.app.beans.db.addressDb.ProvinceDb;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ProvinceRepo extends JpaRepository<ProvinceDb, Long>
 {
     @Query(value = "select * from adres_il il", nativeQuery = true)

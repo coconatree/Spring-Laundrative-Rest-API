@@ -30,9 +30,6 @@ public class InstitutionDao
     InstitutionRepo repository;
 
     @Autowired
-    InstitutionServiceRepo institutionServiceRepo;
-
-    @Autowired
     InstitutionWorkingRepo workingRepository;
 
     @Autowired
