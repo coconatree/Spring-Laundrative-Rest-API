@@ -11,14 +11,18 @@ import javax.servlet.ServletResponse;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component
-@Order(0)
-public class LogFilter implements Filter
-{
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-	{
-		chain.doFilter(request, response);
-	}
 
-}
+//TODO
+// What it is this doing ??
+
+ @Component
+ @Order(0)
+ public class LogFilter implements Filter
+ {
+ @Override
+ public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+ {
+ chain.doFilter(request, response);
+ }
+ }
+

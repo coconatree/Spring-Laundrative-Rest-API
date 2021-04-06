@@ -7,6 +7,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.stereotype.Component;
 
+//TODO
+// What it is this doing ??
+
 @Component
 @AllArgsConstructor
 public class SameSiteCookieInjector

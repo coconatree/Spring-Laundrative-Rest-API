@@ -17,8 +17,6 @@ public class CountyDb
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Foreign key ?
-
     @Column(name = "ilce_id")
     private Long districtId;
 

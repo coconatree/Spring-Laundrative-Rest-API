@@ -1,17 +1,17 @@
 package com.laundrative_v2.app.utility;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.security.Key;
 import java.util.*;
 
 public class Utility
@@ -40,25 +40,24 @@ public class Utility
     /**
      Following methods creates a ResponseEntity according to the given parameters
 
-     @param key this is the JWT
-     @param body this is the response object
-     @param status this is the status
-
      @return returns a ResponseEntity
      */
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    public static Date getCurrentDate() {
+        return new Date(System.currentTimeMillis());
+    }
+
     public static ResponseEntity<Object> createResponse(String key, Object body, HttpStatus status)
     {
-        HttpHeaders header = new HttpHeaders();
+        ResponseEntityCustom info = ResponseEntityCustom.from(
+                getCurrentDate().toString(),
+                HttpMethod.GET,
+                status,
+                body
+        );
 
-        //TODO
-        // Should set up the default header values
-
-        // Auth Token
-
-        header.set("AuthToken", key);
-
-        return new ResponseEntity<>(body, header, status);
+        return new ResponseEntity<>(info, null, status);
     }
 
     /** *********************************************************************** */

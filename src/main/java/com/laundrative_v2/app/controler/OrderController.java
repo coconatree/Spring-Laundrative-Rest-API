@@ -29,10 +29,10 @@ public class OrderController
             return Utility.createResponse("", null, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Object> getPastOrders(@PathVariable(value = "id") Long id)
+    @GetMapping(value = "/{customerId}")
+    public ResponseEntity<Object> getPastOrders(@PathVariable(value = "customerId") Long customerId)
     {
-        List<OrderHistoryRes> orderHistoryRes = orderDao.get_Order_History(id);
+        List<OrderHistoryRes> orderHistoryRes = orderDao.get_Order_History(customerId);
 
         if(orderHistoryRes != null)
             return Utility.createResponse("", orderHistoryRes, HttpStatus.OK);

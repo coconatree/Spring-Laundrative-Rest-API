@@ -4,6 +4,7 @@ import com.laundrative_v2.app.beans.db.orderDb.OrderDb;
 import com.laundrative_v2.app.beans.db.orderDb.OrderDetailsDb;
 import com.laundrative_v2.app.beans.json.order.OrderProduct;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -50,7 +51,7 @@ public class OrderHistoryRes
 
         response.setServiceTotal(new BigDecimal(0.0));
         response.setServicePrice(db.getTotal());
-        response.setDiscountType(db.getDiscountType());
+        // response.setDiscountType();
         response.setDiscountPercentage(db.getDiscount());
         response.setReceivingDate(db.getReceivingDate());
         response.setDeliverDate(db.getDeliveryDate());

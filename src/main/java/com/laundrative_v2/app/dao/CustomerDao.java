@@ -3,10 +3,11 @@ package com.laundrative_v2.app.dao;
 import com.laundrative_v2.app.beans.db.customerDb.CustomerAddressDb;
 import com.laundrative_v2.app.beans.db.customerDb.CustomerDb;
 import com.laundrative_v2.app.beans.json.customer.AddressObject;
-import com.laundrative_v2.app.beans.json.customer.CustomerDetails;
+import com.laundrative_v2.app.beans.json.customer.request.CustomerPostReq;
+import com.laundrative_v2.app.beans.json.customer.response.CustomerInfoRes;
 import com.laundrative_v2.app.repository.customerRepo.CustomerAddressRepo;
 import com.laundrative_v2.app.repository.customerRepo.CustomerRepo;
-import com.laundrative_v2.app.utility.JWTUtil;
+import com.laundrative_v2.app.exception.EmailNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,49 @@ import java.util.stream.Collectors;
 public class CustomerDao
 {
     @Autowired
-    private CustomerRepo repo;
+    private CustomerRepo repository;
 
     @Autowired
     private CustomerAddressRepo customerAddressRepo;
+
+
+    public CustomerInfoRes info(String email)
+    {
+        return CustomerInfoRes.from(findByEmail(email));
+    }
+
+    public CustomerDb findByEmail(String email)
+    {
+        return repository.findByEmailCustom(email);
+    }
+
+    public List<Long> getFavoriteList(String email)
+    {
+        return repository.getFavoriteList(email);
+    }
+
+    public Long register(CustomerDb customer)
+    {
+        return repository.save(customer).getId();
+    }
+
+    public void update(CustomerDb customer)
+    {
+        saveCustomer(customer);
+    }
+
+    @Deprecated
+    public void delete(String email)
+    {
+        CustomerDb customer = findByEmail(email);
+        customer.setActive(0);
+        saveCustomer(customer);
+    }
+
+    private Long saveCustomer(CustomerDb customer)
+    {
+        return repository.save(customer).getId();
+    }
 
     public List<AddressObject> getAllAddresses(Long customerId)
     {

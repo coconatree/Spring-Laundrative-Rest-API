@@ -29,7 +29,7 @@ public class InstListQueryRes
     private BigDecimal freeServicePrice;
     private Boolean isFavorite;
 
-    public static InstListQueryRes from(InstitutionDb db, NeighborhoodInfo neighborhoodInfo, Date date)
+    public static InstListQueryRes from(InstitutionDb db, NeighborhoodInfo neighborhoodInfo, Date date, boolean isFavorite)
     {
         InstListQueryRes response = new InstListQueryRes();
         InstitutionServiceDb service = null;
@@ -66,7 +66,7 @@ public class InstListQueryRes
         response.setMinimumOrderPrice(service.getMinOrderAmount());
         response.setMaximumServicePrice(new BigDecimal(1000));
         response.setMaximumServicePrice(service.getMinServiceAmount());
-        response.setIsFavorite(false);
+        response.setIsFavorite(isFavorite);
 
         return response;
     }

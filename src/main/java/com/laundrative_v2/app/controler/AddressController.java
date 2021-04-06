@@ -1,10 +1,11 @@
 package com.laundrative_v2.app.controler;
 
-import com.laundrative_v2.app.beans.db.addressDb.CountyDb;
 import com.laundrative_v2.app.beans.db.addressDb.DistrictDb;
-import com.laundrative_v2.app.beans.db.addressDb.NeighborhoodDb;
 import com.laundrative_v2.app.beans.db.addressDb.ProvinceDb;
+import com.laundrative_v2.app.beans.json.address.response.AddressListRes;
+import com.laundrative_v2.app.beans.json.address.response.AddressProvinceRes;
 import com.laundrative_v2.app.dao.AddressDao;
+import com.laundrative_v2.app.service.AddressService;
 import com.laundrative_v2.app.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,16 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/na/address")
 public class AddressController
 {
     @Autowired
     AddressDao addressDao;
 
+    @Autowired
+    private AddressService service;
+
     @GetMapping(value = "/province")
-    public ResponseEntity<Object> getAllP()
+    public ResponseEntity<Object> getAllProvince()
     {
-        List<ProvinceDb> response = addressDao.getAllProvince();
+        List<AddressProvinceRes> response = service.findAllProvinces();
 
         if(response != null)
             return Utility.createResponse("", response, HttpStatus.OK);
@@ -34,36 +38,14 @@ public class AddressController
             return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(value = "/district/{provinceId}")
-    public ResponseEntity<Object> getAllD(@PathVariable(value = "provinceId") Long provinceId)
+    @GetMapping(value = "/{provinceId}")
+    public ResponseEntity<Object> findAllByProvinceId(@PathVariable("provinceId") Long provinceId)
     {
-        List<DistrictDb> response  = addressDao.getAllDistrict(provinceId);
+        List<AddressListRes> list = service.findAllByProvinceId(provinceId);
 
-        if(response != null)
-            return Utility.createResponse("", response, HttpStatus.OK);
+        if(list != null)
+            return Utility.createResponse("", list, HttpStatus.OK);
         else
-            return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @GetMapping(value = "/county/{districtId}")
-    public ResponseEntity<Object> getAllC(@PathVariable(value = "districtId") Long districtId)
-    {
-        List<CountyDb> response =  addressDao.getAllCounty(districtId);
-
-        if(response != null)
-            return Utility.createResponse("", response, HttpStatus.OK);
-        else
-            return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @GetMapping(value = "/neighborhood/{countyId}")
-    public ResponseEntity<Object> getAllN(@PathVariable(value = "countyId") Long countyId)
-    {
-        List<NeighborhoodDb> response = addressDao.getAllNeighborhood(countyId);
-
-        if(response != null)
-            return Utility.createResponse("", response, HttpStatus.OK);
-        else
-            return Utility.createResponse("", "An error occurred and it has been logged", HttpStatus.INTERNAL_SERVER_ERROR);
+            return Utility.createResponse("", "", HttpStatus.BAD_REQUEST);
     }
 }

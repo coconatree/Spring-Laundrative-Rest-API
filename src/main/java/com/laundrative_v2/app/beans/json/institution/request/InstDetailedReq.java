@@ -11,9 +11,4 @@ import java.util.Date;
 @NoArgsConstructor
 public class InstDetailedReq
 {
-    private Long neighborhoodId;
-    private Date receivingDate;
-    private  Date deliveryDate;
-    private  CategoryKind[] array;
-    private  Boolean freeService;
 }

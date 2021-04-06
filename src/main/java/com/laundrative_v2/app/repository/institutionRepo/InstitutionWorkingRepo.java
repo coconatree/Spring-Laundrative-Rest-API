@@ -12,14 +12,8 @@ import java.util.List;
 @Repository
 public interface InstitutionWorkingRepo extends JpaRepository<InstitutionWorkingDb, Long>
 {
-    List<InstitutionWorkingDb> findAllByInstitutionIdInAndDayAndStartingTimeLessThanEqualAndEndingTimeGreaterThanEqual
-            (
-                List<Long> list,
-                Integer day,
-                Time startingTime,
-                Time endingTime
-                );
-
     @Query(value = "select * from kurum_calisma k where k.kurum_id = :id", nativeQuery = true)
     List<InstitutionWorkingDb> findAllByIdCustom(@Param("id") Long id);
+
+    List<InstitutionWorkingDb> findByInstitutionIdInAndDay(List<Long> instIdList, Integer day);
 }

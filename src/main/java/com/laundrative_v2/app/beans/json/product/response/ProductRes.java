@@ -19,10 +19,24 @@ public class ProductRes
 
     public static ProductRes from(KindDb db)
     {
-        ProductRes response = new ProductRes();
-        response.setCategoryId(db.getCategory());
-        response.setImage(Utility.getInstance().imageToBase64(db.getImage()));
-        response.setName(db.getName());
+        ProductRes response = null;
+
+        System.out.println("DB : " + db);
+
+        if(db != null)
+        {
+            response = new ProductRes();
+
+            response.setCategoryId(db.getCategory());
+            response.setImage(Utility.getInstance().imageToBase64(db.getImage()));
+            response.setName(db.getName());
+        }
+
         return response;
+    }
+
+    public static boolean isNull(ProductRes product)
+    {
+        return product == null;
     }
 }

@@ -4,6 +4,7 @@ import com.laundrative_v2.app.beans.json.order.request.OrderPostReq;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -52,9 +53,12 @@ public class OrderDb
     @Column(name = "teslim_etme_adres")
     private String deliveryAddress;
     @Column(name = "teslimat_status")
-    private int deliveryStatus;
+    private Integer deliveryStatus;
     @Column(name = "odeme_status")
-    private int paymentStatus;
+    private Integer paymentStatus;
+
+    @Column(name = "aktif")
+    private Integer active;
 
     public OrderDb(){}
 
@@ -80,7 +84,13 @@ public class OrderDb
         orderDb.setDeliveryDate(request.getDeliveryDate());
         orderDb.setDeliveryAddress(request.getDeliveryAddress());
         orderDb.setDeliveryStatus(0);
+        orderDb.setActive(1);
 
         return orderDb;
+    }
+
+    public boolean isActive()
+    {
+        return this.active == 1;
     }
 }
