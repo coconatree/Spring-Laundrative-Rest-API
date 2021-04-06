@@ -57,10 +57,6 @@ public class CustomerService
     public void deleteCustomer(String email, CustomerDelReq requestBody)
     {
         CustomerDb originalCustomer = findCustomerByEmail(email);
-
-        if(originalCustomer == null)
-            throw new EmailNotFoundException("Authentication Failed", HttpStatus.UNAUTHORIZED);
-
         CustomerDeletedDb deletedCustomer = CustomerDeletedDb.from(originalCustomer, requestBody);
 
         customerDao.saveToDeleted(deletedCustomer);
